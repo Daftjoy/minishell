@@ -1,19 +1,24 @@
 #include <stdio.h>
 #include <unistd.h>
 
-
-int readline(char **argv)
+int ft_strlen(char *str)
 {
-	printf("%s", argv[1]);
-	return (0);
+	int i;
+
+	i = 0;
+	while(str[i])
+		i++;
+	return i;
 }
 
-
-int main (int argc, char **argv)
+int main ()
 {
-	if (argc > 1)
-	{
-		readline(argv);
-	}
+	char buffer[5];
+	int	ret;
+
+	write(1, "... ", 4);
+	ret = read(0, buffer, 4);
+	buffer[4] = '\0';
+	write(1, buffer, ret);
 	return 0;
 }
