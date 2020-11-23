@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2020/09/15 13:11:32 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/11/23 18:22:35 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,15 @@ static unsigned int	ft_wcount(char const *s, char c)
 		}
 		w++;
 		while ((*(s + n) != c) && *(s + n))
+		{
+			if (*(s + n) == '\"')
+			{
+				n++;
+				while (s[n] != '\"' && s[n])
+					n++;
+			}
 			n++;
+		}
 	}
 	return (w);
 }
@@ -40,6 +48,14 @@ static unsigned int	ft_lcount(char const *s, char c, unsigned int n)
 	k = 0;
 	while (*(s + n) != c && *(s + n))
 	{
+		if (*(s + n) == '\"')
+		{
+			k++;
+			while (s[++n] != '\"' && s[n])
+			{
+				k++;
+			}
+		}
 		k++;
 		n++;
 	}

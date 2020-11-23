@@ -1,32 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2020/11/23 17:42:51 by antmarti         ###   ########.fr       */
+/*   Created: 2019/11/16 23:15:25 by antmarti          #+#    #+#             */
+/*   Updated: 2020/10/29 12:19:31 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/types.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include "get_next_line.h"
-
-
-typedef struct s_args
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	char	*main_chain;
-	char	**args;
-	char	**args2;	
-}				t_args;
-
-char				**ft_split(char *s, char c);
-int					ft_strcmp(const char *s1, const char *s2);
-
+	unsigned char	*str1;
+	unsigned char	*str2;
+	unsigned int	i;
+	
+	i = 0;
+	str1 = (unsigned char *)s1;
+	str2 = (unsigned char *)s2;
+	while (str1[i] && str2[i] && str1[i] == str2[i])
+		i++;
+	return (str1[i] - str2[i]);
+}
