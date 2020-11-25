@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2020/11/25 18:06:13 by agianico         ###   ########.fr       */
+/*   Updated: 2020/11/25 18:54:54 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,27 @@ static char			*ft_find(char const *s)
 
 static unsigned int	ft_wcount(char const *s)
 {
-	unsigned int	n;
 	unsigned int	w;
 	char			*str;
 
-	n = 0;
 	w = 1;
 	str = (char *)s;
-	while (ft_find(&str[n]))
+	while (ft_find(str) && str)
 	{
-		if (ft_strchr(&str[n], '\"') < ft_find(&str[n]))
-			str = ft_find(&str[n]);
-		w++;
-	}
-	while (!(ft_find(&str[n])) && *(str + n))
-	{
-		if (*(str + n) == '\"')
+		if (!ft_strchr(str, '\"') || (ft_strchr(str, '\"') &&
+		ft_strchr(str, '\"') > ft_find(str)))
 		{
-			n++;
-			while (str[n] != '\"' && str[n])
-				n++;
+			str = ft_find(str) + 1;
+			w++;
 		}
-		n++;
+		else
+		{
+			str = ft_strchr(str, '\"') + 1;
+			if (!ft_strchr(str, '\"'))
+				write(1, "No double quotes", 17);
+			str = ft_strchr(str, '\"') + 1;
+		}
+		//printf("----------->%s,      %d\n", str, w);
 	}
 	return (w);
 }
@@ -59,7 +58,7 @@ static unsigned int	ft_lcount(char const *s, unsigned int n)
 	unsigned int k;
 
 	k = 0;
-	while (!(ft_find(&s[n])) && *(s + n))
+	while ((ft_find(&s[n])) > &s[n] && *(s + n))
 	{
 		if (*(s + n) == '\"')
 		{
@@ -85,8 +84,8 @@ static unsigned int	ft_loop(char *s, char **str)
 	n = 0;
 	while (i < (ft_wcount(s)))
 	{
-		while (ft_find(&s[n]))
-			n++;
+		//while (ft_find(&s[n]) =)
+		//	n++;
 		if (!(str[i] = (char *)malloc((ft_lcount(s, n) + 1) * sizeof(char))))
 			return (0);
 		j = 0;
