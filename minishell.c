@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2020/11/25 18:34:32 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:40:36 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,20 +65,17 @@ void		ft_loop(void)
 		i = 0;
 		while (mini->args[i])
 		{
-			//mini->args2 = ft_split(mini->args[i], ' ');
-			mini->args2 = ft_split2(mini->args[i]);
+			mini->args2 = ft_split2(mini->args[i], mini);
 			j = 0;
-			//while (mini->args2[j])
-			//{
-			//	write(1, mini->args2[j], ft_strlen(mini->args2[j]));
-			//	write(1, " ", 1);
-			//	j++;
-			//}
+			while (mini->args2[j])
+			{
+				write(1, mini->args2[j], ft_strlen(mini->args2[j]));
+				write(1, " ", 1);
+				j++;
+			}
 			write(1, "\n", 1);
 			i++;
 		}
-		printf("%d\n", i);
-		//status = ft_execute(args);
 		write(1, "... ", 4);
 		free(mini->main_chain);
 	}

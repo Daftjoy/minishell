@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2020/11/25 17:11:13 by agianico         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:40:00 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,11 @@ typedef struct	s_args
 	char		*main_chain;
 	char		**args;
 	char		**args2;
+	char		*type;
 }				t_args;
 
 char			**ft_split(char *s, char c);
-char			**ft_split2(char *s);
+char			**ft_split2(char *s, t_args *mini);
 int				ft_strcmp(const char *s1, const char *s2);
 
 # endif

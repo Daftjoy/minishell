@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2020/11/25 18:54:54 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:39:36 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,20 @@
 static char			*ft_find(char const *s)
 {
 	int	i;
+	char *ret;
 
+	ret = 0;
 	i = 0;
 	while (SYMBOLS[i])
 	{
-		if (ft_strchr(s, SYMBOLS[i]))
-			return (ft_strchr(s, SYMBOLS[i]));
+		if (ft_strchr(s, SYMBOLS[i]) && ret == 0)
+			ret = ft_strchr(s, SYMBOLS[i]);
+		else if (ft_strchr(s, SYMBOLS[i]) && ret &&
+		(ret > ft_strchr(s, SYMBOLS[i])))
+			ret = ft_strchr(s, SYMBOLS[i]);
 		i++;
 	}
-	return (0);
+	return (ret);
 }
 
 static unsigned int	ft_wcount(char const *s)
@@ -58,7 +63,7 @@ static unsigned int	ft_lcount(char const *s, unsigned int n)
 	unsigned int k;
 
 	k = 0;
-	while ((ft_find(&s[n])) > &s[n] && *(s + n))
+	while ((((ft_find(&s[n]) > &s[n]) || !ft_find(&s[n])) && *(s + n)) )
 	{
 		if (*(s + n) == '\"')
 		{
@@ -68,13 +73,15 @@ static unsigned int	ft_lcount(char const *s, unsigned int n)
 				k++;
 			}
 		}
+		//printf("find -----> %s\n", ft_find(&s[n]));
 		k++;
 		n++;
 	}
+	//printf("------> l %d\n", k);
 	return (k);
 }
 
-static unsigned int	ft_loop(char *s, char **str)
+static unsigned int	ft_loop(char *s, char **str, char *type)
 {
 	unsigned int	i;
 	unsigned int	j;
@@ -82,6 +89,7 @@ static unsigned int	ft_loop(char *s, char **str)
 
 	i = 0;
 	n = 0;
+	//type[0] = malloc(ft_wcount(s) -1 );
 	while (i < (ft_wcount(s)))
 	{
 		//while (ft_find(&s[n]) =)
@@ -96,12 +104,15 @@ static unsigned int	ft_loop(char *s, char **str)
 		}
 		str[i][j] = '\0';
 		i++;
-		n += j;
+		type[i] = s[n + j];
+		n += j +1;
 	}
+	type[i] = '\0';
+	printf("%s\n", type);
 	return (i);
 }
 
-char				**ft_split2(char *s)
+char				**ft_split2(char *s, t_args *mini)
 {
 	char			**str;
 	unsigned int	i;
@@ -111,6 +122,6 @@ char				**ft_split2(char *s)
 	if (!(str = (char **)malloc((ft_wcount(s) + 1) * sizeof(char *))))
 		return (0);
 	str[ft_wcount(s)] = NULL;
-	i = ft_loop(s, str);
+	i = ft_loop(s, str, mini->type);
 	return (str);
 }
