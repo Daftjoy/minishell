@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2020/11/27 17:39:36 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/11/27 17:54:53 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ static unsigned int	ft_loop(char *s, char **str, char *type)
 
 	i = 0;
 	n = 0;
-	//type[0] = malloc(ft_wcount(s) -1 );
 	while (i < (ft_wcount(s)))
 	{
 		//while (ft_find(&s[n]) =)
@@ -103,12 +102,11 @@ static unsigned int	ft_loop(char *s, char **str, char *type)
 			j++;
 		}
 		str[i][j] = '\0';
-		i++;
 		type[i] = s[n + j];
-		n += j +1;
+		i++;
+		n += j + 1;
 	}
 	type[i] = '\0';
-	printf("%s\n", type);
 	return (i);
 }
 
