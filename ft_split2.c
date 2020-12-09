@@ -6,11 +6,12 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2020/11/27 17:59:30 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/09 18:28:10 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 static char			*ft_find(char const *s)
 {
@@ -53,7 +54,6 @@ static unsigned int	ft_wcount(char const *s)
 				write(1, "No double quotes", 17);
 			str = ft_strchr(str, '\"') + 1;
 		}
-		//printf("----------->%s,      %d\n", str, w);
 	}
 	return (w);
 }
@@ -73,11 +73,9 @@ static unsigned int	ft_lcount(char const *s, unsigned int n)
 				k++;
 			}
 		}
-		//printf("find -----> %s\n", ft_find(&s[n]));
 		k++;
 		n++;
 	}
-	//printf("------> l %d\n", k);
 	return (k);
 }
 
@@ -91,8 +89,6 @@ static unsigned int	ft_loop(char *s, char **str, char *type)
 	n = 0;
 	while (i < (ft_wcount(s)))
 	{
-		//while (ft_find(&s[n]) =)
-		//	n++;
 		if (!(str[i] = (char *)malloc((ft_lcount(s, n) + 1) * sizeof(char))))
 			return (0);
 		j = 0;
@@ -107,7 +103,6 @@ static unsigned int	ft_loop(char *s, char **str, char *type)
 		n += j + 1;
 	}
 	type[i] = '\0';
-	printf("%s\n", type);
 	return (i);
 }
 

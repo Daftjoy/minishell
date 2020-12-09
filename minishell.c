@@ -6,61 +6,28 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2020/11/27 17:40:36 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/09 18:09:51 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_pipe(t_args *mini, char *s)
-{
-	int		i;
-	char	**p_chain;
 
-	mini = 0;
-	i = 0;
-	p_chain = ft_split(s, '|');
-	while (p_chain[i])
-	{
-		write(1, p_chain[i], ft_strlen(p_chain[i]));
-		write(1, "p", 1);
-		i++;
-	}
-}
 
-void		ft_redir(t_args *mini, char *s)
-{
-	int		i;
-	char	**p_chain;
-
-	mini = 0;
-	i = 0;
-	p_chain = ft_split(s, '>');
-	while (p_chain[i])
-	{
-		write(1, p_chain[i], ft_strlen(p_chain[i]));
-		write(1, "p", 1);
-		i++;
-	}
-}
-
-void		ft_loop(void)
+void		ft_loop(char **env)
 {
 	t_args	*mini;
-	int		status;
 	int i;
 	int j;
+	pid_t childpid;
 
 	mini = malloc(sizeof(t_args));
 	mini->main_chain = 0;
 	mini->args = 0;
-	status = 1;
 	i = 0;
 	write(1, "... ", 4);
-	while (status)
+	while (get_next_line(0, &mini->main_chain))
 	{
-		get_next_line(0, &mini->main_chain);
-
 		mini->args = ft_split(mini->main_chain, ';');
 		i = 0;
 		while (mini->args[i])
@@ -69,11 +36,19 @@ void		ft_loop(void)
 			j = 0;
 			while (mini->args2[j])
 			{
-				write(1, mini->args2[j], ft_strlen(mini->args2[j]));
-				write(1, " ", 1);
+				mini->commands = ft_split(mini->args2[j], ' ');
+				childpid = fork();
+				if (childpid >= 0)
+				{
+					if (childpid != 0)
+					{
+						wait(NULL);
+					}
+					else
+						ft_exe(mini->commands[0], mini->commands, env);
+				}
 				j++;
 			}
-			write(1, "\n", 1);
 			i++;
 		}
 		write(1, "... ", 4);
@@ -85,7 +60,6 @@ int				main(int argc, char **argv, char **env)
 {
 	(void)argc;
 	(void)argv;
-	(void)env;
-	ft_loop();
+	ft_loop(env);
 	return (0);
 }

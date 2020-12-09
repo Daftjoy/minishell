@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 19:33:51 by antmarti          #+#    #+#             */
-/*   Updated: 2020/10/20 13:06:04 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/09 17:28:19 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@ char                    *ft_substr(char const *s, unsigned int start, size_t len
 char                    *ft_strdup(const char *s1);
 int                             ft_aux(char **line);
 size_t  ft_strlen(const char *s);
+
 #endif
 #endif
