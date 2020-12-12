@@ -6,18 +6,18 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 17:01:25 by antmarti          #+#    #+#             */
-/*   Updated: 2020/12/09 18:20:57 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/09 18:32:01 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int             get_next_line(int fd, char **line)
+int		get_next_line(int fd, char **line)
 {
-	int                     ret;
-	char            *buffer;
-	static char     *file[4096];
-	char            *acc;
+	int				ret;
+	char			*buffer;
+	static char		*file[4096];
+	char			*acc;
 
 	if (!(buffer = malloc((BUFFER_SIZE + 1) * sizeof(char))) || fd < 0
 			|| line == NULL)
@@ -41,16 +41,16 @@ int             get_next_line(int fd, char **line)
 			: ft_checker(fd, line, file, ret));
 }
 
-int             ft_aux(char **line)
+int		ft_aux(char **line)
 {
 	*line = ft_strdup("");
 	return (0);
 }
 
-int             ft_checker(int fd, char **line, char **file, int ret)
+int		ft_checker(int fd, char **line, char **file, int ret)
 {
-	int             i;
-	char    *temp;
+	int		i;
+	char	*temp;
 
 	if (ret == -1)
 		return (-1);

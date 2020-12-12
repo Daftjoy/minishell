@@ -6,17 +6,16 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2020/12/09 18:28:10 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/12 17:34:32 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
 static char			*ft_find(char const *s)
 {
-	int	i;
-	char *ret;
+	int		i;
+	char	*ret;
 
 	ret = 0;
 	i = 0;
@@ -63,7 +62,7 @@ static unsigned int	ft_lcount(char const *s, unsigned int n)
 	unsigned int k;
 
 	k = 0;
-	while ((((ft_find(&s[n]) > &s[n]) || !ft_find(&s[n])) && *(s + n)) )
+	while ((((ft_find(&s[n]) > &s[n]) || !ft_find(&s[n])) && *(s + n)))
 	{
 		if (*(s + n) == '\"')
 		{
@@ -84,6 +83,7 @@ static unsigned int	ft_loop(char *s, char **str, char *type)
 	unsigned int	i;
 	unsigned int	j;
 	unsigned int	n;
+	(void)type;
 
 	i = 0;
 	n = 0;

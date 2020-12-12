@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2020/12/09 18:26:36 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/12 17:31:51 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	ft_exe(char *func, char **argu, char **env)
 			paths = ft_split(env[i], ':');
 		i++;
 	}
+	i = 0;
 	while (paths[i])
 	{
 		p = malloc(100);
