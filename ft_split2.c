@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2020/12/12 17:34:32 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/14 16:54:24 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ static unsigned int	ft_loop(char *s, char **str, char *type)
 	unsigned int	i;
 	unsigned int	j;
 	unsigned int	n;
-	(void)type;
 
 	i = 0;
 	n = 0;
@@ -102,7 +101,7 @@ static unsigned int	ft_loop(char *s, char **str, char *type)
 		i++;
 		n += j + 1;
 	}
-	type[i] = '\0';
+	//type[i] = '\0';
 	return (i);
 }
 

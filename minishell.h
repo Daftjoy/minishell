@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2020/12/09 18:39:37 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/14 18:40:19 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ typedef struct	s_args
 	char		**args2;
 	char		**commands;
 	char		*type;
+	int			in;
+	int			out;
 }				t_args;
 
 char			**ft_split(char *s, char c);
@@ -38,6 +40,7 @@ int				ft_strcmp(const char *s1, const char *s2);
 char 			**ft_argu(char *arg);
 void			ft_exe(char *func, char **argu, char **env);
 void			ft_read_command(char **env, t_args *mini);
+void			ft_subpro(t_args *mini, char **env);
 
 # endif
 #endif

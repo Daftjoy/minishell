@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2020/12/12 17:31:51 by antmarti         ###   ########.fr       */
+/*   Updated: 2020/12/14 16:39:53 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ void		ft_redir(t_args *mini, char *s)
 	//}
 }
 
-void	ft_exe(char *func, char **argu, char **env)
+void		ft_exe(char *func, char **argu, char **env)
 {
-	int i;
-	char **paths;
-	char *p;
-	int	j;
+	int		i;
+	char	**paths;
+	char	*p;
+	int		j;
 
 	i = 0;
 	j = 1;
@@ -72,4 +72,3 @@ void	ft_exe(char *func, char **argu, char **env)
 	}
 	return ;
 }
-
