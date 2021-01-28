@@ -3,16 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2020/12/14 19:13:03 by agianico         ###   ########.fr       */
+/*   Updated: 2021/01/28 17:15:05 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_subpro(t_args *mini, char **env)
+void		ft_redir(t_args *mini, char **env)
+{
+	int fd_file;
+	int i;
+	int pid;
+	i = 0;
+	mini->commands = ft_split(mini->args2[0], ' ');
+	/*while(mini->args2[i])
+	  {
+	  printf("%s\n", mini->args2[i]);
+	  i++;
+	  }*/
+	i = 0;
+	//printf("%s\n", mini->type);
+	while (mini->type[i])
+	{
+		if (mini->type[i] == '>' || mini->type[i] == ',')
+		{
+			if (mini->type[i] == ',')
+				fd_file = open(ft_strtrim(mini->args2[i + 1], " "), O_CREAT
+				| O_WRONLY | O_APPEND, S_IRWXU);
+			else
+				fd_file = open(ft_strtrim(mini->args2[i + 1], " "), O_CREAT
+				| O_WRONLY | O_TRUNC, S_IRWXU);
+			if (mini->type[i + 1] &&
+			(mini->type[i + 1] == '>' || mini->type[i + 1] == ','))
+			{
+				i++;
+				continue;
+			}
+		}
+		else if (mini->type[i] == '|')
+		{
+
+			i = ft_subpro(mini,env, i);
+			printf("%d\n", i);
+			continue;
+		}
+		pid = fork();
+		if (pid == 0)
+		{
+			dup2(fd_file, 1);
+			ft_exe(mini->commands[0], mini->commands, env);
+		}
+		else
+		{
+			wait(NULL);
+		}
+		i++;
+	}
+}
+
+
+int			ft_subpro(t_args *mini, char **env, int j)
 {
 	int	**fd;
 	int	pid;
@@ -20,7 +73,8 @@ void		ft_subpro(t_args *mini, char **env)
 
 	i = 0;
 	fd = malloc(ft_strlen(mini->type) * sizeof(int *));
-	while (i < (int)ft_strlen(mini->type))
+
+	while (mini->type[j + i] == '|')
 	{
 		fd[i] = malloc(2 * sizeof(int));
 		i++;
@@ -38,7 +92,7 @@ void		ft_subpro(t_args *mini, char **env)
 	else
 	{
 		i = 1;
-		while (i < (int)ft_strlen(mini->type))
+		while (mini->type[j + i] == '|')
 		{
 			mini->commands = ft_split(mini->args2[i], ' ');
 			close(fd[i - 1][1]);
@@ -57,7 +111,7 @@ void		ft_subpro(t_args *mini, char **env)
 		}
 		mini->commands = ft_split(mini->args2[i], ' ');
 		close(fd[i - 1][1]);
-		if (ft_strlen(mini->type) > 1)
+		if (i > 1)
 			close(fd[i - 2][0]);
 		pid = fork();
 		if (pid == 0)
@@ -68,14 +122,22 @@ void		ft_subpro(t_args *mini, char **env)
 		}
 	}
 	close(fd[0][0]);
-	i = -1;
-	while (++i <= (int)ft_strlen(mini->type))
+	i = 0;
+	wait(NULL);
+	while (mini->type[j + i] == '|')
+	{
 		wait(NULL);
-	mini->type[0] = '\0';
-	i = -1;
-	while (++i < (int)ft_strlen(mini->type))
+		i++;
+	}
+	//mini->type[0] = '\0';
+	i = 0;
+	while (mini->type[j + i] == '|')
+	{
 		free(fd[i]);
+		i++;
+	}
 	free(fd);
+	return (i + j);
 }
 
 void		ft_read_command(char **env, t_args *mini)
@@ -102,7 +164,7 @@ void		ft_read_command(char **env, t_args *mini)
 			}
 		}
 		else
-			ft_subpro(mini, env);
+			ft_redir(mini, env);
 	}
 }
 
