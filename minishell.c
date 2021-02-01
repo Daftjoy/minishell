@@ -6,66 +6,119 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2021/01/28 17:15:05 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/01 19:59:40 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_redir(t_args *mini, char **env)
+void		ft_input(t_args *mini, char **env)
 {
 	int fd_file;
 	int i;
 	int pid;
-	i = 0;
-	mini->commands = ft_split(mini->args2[0], ' ');
-	/*while(mini->args2[i])
-	  {
-	  printf("%s\n", mini->args2[i]);
-	  i++;
-	  }*/
-	i = 0;
-	//printf("%s\n", mini->type);
-	while (mini->type[i])
-	{
-		if (mini->type[i] == '>' || mini->type[i] == ',')
-		{
-			if (mini->type[i] == ',')
-				fd_file = open(ft_strtrim(mini->args2[i + 1], " "), O_CREAT
-				| O_WRONLY | O_APPEND, S_IRWXU);
-			else
-				fd_file = open(ft_strtrim(mini->args2[i + 1], " "), O_CREAT
-				| O_WRONLY | O_TRUNC, S_IRWXU);
-			if (mini->type[i + 1] &&
-			(mini->type[i + 1] == '>' || mini->type[i + 1] == ','))
-			{
-				i++;
-				continue;
-			}
-		}
-		else if (mini->type[i] == '|')
-		{
 
-			i = ft_subpro(mini,env, i);
-			printf("%d\n", i);
-			continue;
-		}
-		pid = fork();
-		if (pid == 0)
-		{
-			dup2(fd_file, 1);
-			ft_exe(mini->commands[0], mini->commands, env);
-		}
-		else
-		{
-			wait(NULL);
-		}
+	i = 0;
+	while (mini->type[i] == '<')
+	{
+		fd_file = open(ft_strtrim(mini->args2[i + mini->arg + 1], " "),
+		O_RDONLY, S_IRWXU);
 		i++;
+	}
+	pid = fork();
+	if (pid == 0)
+	{
+		dup2(fd_file, 0);
+		if (mini->type[i] == '>' || mini->type[i] == ',')
+			dup2(ft_open_file(mini, i), 1);
+		ft_exe(mini->commands[0], mini->commands, env);
+	}
+	else
+		wait(NULL);
+	mini->type = mini->type + i;
+	mini->arg = mini->arg + i + 1;
+	if (ft_strchr(mini->type, '|'))
+	{
+		if (mini->type[0] == '>' || mini->type[0] == ',')
+		{
+			i = 0;
+			while (mini->type[i] == '>' || mini->type[i] == ',')
+			{
+				mini->arg++;
+				mini->type = mini->type + 1;
+				i++;
+			}
+			mini->type = mini->type + 1;
+			ft_redir(mini, env);
+		}
 	}
 }
 
+int			ft_open_file(t_args *mini, int i)
+{
+	int fd_file;
 
-int			ft_subpro(t_args *mini, char **env, int j)
+	while (mini->type[i] == ',' || mini->type[i] == '>')
+	{
+		if (mini->type[i] == ',')
+			fd_file = open(ft_strtrim(mini->args2[i + mini->arg  + 1], " "), O_CREAT
+			| O_WRONLY | O_APPEND, S_IRWXU);
+		else
+			fd_file = open(ft_strtrim(mini->args2[i + mini->arg + 1], " "), O_CREAT
+			| O_WRONLY | O_TRUNC, S_IRWXU);
+		i++;
+	}
+	mini->type = mini->type + i;
+	mini->arg = mini->arg + i + 1;
+	return (fd_file);
+}
+
+void		ft_only_redir(t_args *mini, char **env)
+{
+	int fd_file;
+	int pid;
+
+	fd_file = ft_open_file(mini, 0);
+	pid = fork();
+	if (pid == 0)
+	{
+		dup2(fd_file, 1);
+		ft_exe(mini->commands[0], mini->commands, env);
+	}
+	else
+		wait(NULL);
+	if (ft_strchr(mini->type, '|'))
+	{
+		mini->type = mini->type + 1;
+		ft_redir(mini, env);
+	}
+}
+
+void		ft_redir(t_args *mini, char **env)
+{
+	int pid;
+
+	mini->commands = ft_split(mini->args2[mini->arg], ' ');
+	if (mini->type[0] == ',' || mini->type[0] == '>')
+		ft_only_redir(mini, env);
+	else if (mini->type[0] == '<')
+	{
+		ft_input(mini, env);
+	}
+	else if (!ft_strchr(mini->type, '|'))
+	{
+		pid = fork();
+		if (pid == 0)
+			ft_exe(mini->commands[0], mini->commands, env);
+		else
+			wait(NULL);
+		return ;
+	}
+	else
+		ft_subpro(mini, env);
+}
+
+int			ft_subpro(t_args *mini, char **env)
 {
 	int	**fd;
 	int	pid;
@@ -73,14 +126,13 @@ int			ft_subpro(t_args *mini, char **env, int j)
 
 	i = 0;
 	fd = malloc(ft_strlen(mini->type) * sizeof(int *));
-
-	while (mini->type[j + i] == '|')
+	while (mini->type[i] == '|')
 	{
 		fd[i] = malloc(2 * sizeof(int));
 		i++;
 	}
 	pipe(fd[0]);
-	mini->commands = ft_split(mini->args2[0], ' ');
+	mini->commands = ft_split(mini->args2[mini->arg], ' ');
 	pid = fork();
 	if (pid == 0)
 	{
@@ -92,9 +144,9 @@ int			ft_subpro(t_args *mini, char **env, int j)
 	else
 	{
 		i = 1;
-		while (mini->type[j + i] == '|')
+		while (mini->type[i] == '|')
 		{
-			mini->commands = ft_split(mini->args2[i], ' ');
+			mini->commands = ft_split(mini->args2[mini->arg + i], ' ');
 			close(fd[i - 1][1]);
 			pipe(fd[i]);
 			pid = fork();
@@ -109,7 +161,7 @@ int			ft_subpro(t_args *mini, char **env, int j)
 			}
 			i++;
 		}
-		mini->commands = ft_split(mini->args2[i], ' ');
+		mini->commands = ft_split(mini->args2[mini->arg + i], ' ');
 		close(fd[i - 1][1]);
 		if (i > 1)
 			close(fd[i - 2][0]);
@@ -118,26 +170,34 @@ int			ft_subpro(t_args *mini, char **env, int j)
 		{
 			dup2(fd[i - 1][0], 0);
 			close(fd[i - 1][0]);
+			if (mini->type[i] == '>')
+				dup2(ft_open_file(mini, i), 1);
 			ft_exe(mini->commands[0], mini->commands, env);
 		}
 	}
 	close(fd[0][0]);
 	i = 0;
 	wait(NULL);
-	while (mini->type[j + i] == '|')
+	while (mini->type[i] == '|')
 	{
 		wait(NULL);
 		i++;
 	}
-	//mini->type[0] = '\0';
-	i = 0;
-	while (mini->type[j + i] == '|')
+	while (mini->type[i] == '|')
 	{
 		free(fd[i]);
 		i++;
 	}
 	free(fd);
-	return (i + j);
+	mini->type = mini->type + i + 1;
+	mini->arg = mini->arg + i + 1;
+	if (ft_strchr(mini->type, '|'))
+	{
+		mini->type = mini->type + 1;
+		mini->arg = mini->arg + 1;
+		ft_redir(mini, env);
+	}
+	return (i);
 }
 
 void		ft_read_command(char **env, t_args *mini)
@@ -148,9 +208,8 @@ void		ft_read_command(char **env, t_args *mini)
 	i = -1;
 	while (mini->args[++i])
 	{
-		//dup2(mini->in, 0);
-		//dup2(mini->out, 1);
 		mini->args2 = ft_split2(mini->args[i], mini);
+		mini->arg = 0;
 		if (mini->type[0] == 0)
 		{
 			mini->commands = ft_split(mini->args2[0], ' ');
@@ -175,8 +234,6 @@ void		ft_loop(char **env)
 	mini = malloc(sizeof(t_args));
 	mini->main_chain = 0;
 	mini->args = 0;
-	//mini->in = dup(0);
-	//mini->out = dup(1);
 	write(1, "... ", 4);
 	while (get_next_line(0, &mini->main_chain))
 	{
