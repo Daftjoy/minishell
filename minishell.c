@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/01 19:59:40 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/04 16:04:05 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,40 +17,52 @@ void		ft_input(t_args *mini, char **env)
 	int fd_file;
 	int i;
 	int pid;
+	int **fd;
 
 	i = 0;
+	fd = malloc(sizeof(int*));
+	fd[0] = malloc(sizeof(int) * 2);
 	while (mini->type[i] == '<')
 	{
 		fd_file = open(ft_strtrim(mini->args2[i + mini->arg + 1], " "),
 		O_RDONLY, S_IRWXU);
 		i++;
 	}
+	if (mini->type[i] == '|')
+		pipe(fd[0]);
 	pid = fork();
 	if (pid == 0)
 	{
 		dup2(fd_file, 0);
+		close(fd_file);
 		if (mini->type[i] == '>' || mini->type[i] == ',')
 			dup2(ft_open_file(mini, i), 1);
+		if (mini->type[i] == '|')
+		{
+			close(fd[0][0]);
+			dup2(fd[0][1], 1);
+			close(fd[0][1]);
+		}
 		ft_exe(mini->commands[0], mini->commands, env);
 	}
 	else
 		wait(NULL);
-	mini->type = mini->type + i;
-	mini->arg = mini->arg + i + 1;
-	if (ft_strchr(mini->type, '|'))
+	if (mini->type[i] == '|')
 	{
-		if (mini->type[0] == '>' || mini->type[0] == ',')
+		mini->type = mini->type + i;
+		mini->arg = mini->arg + i + 1;
+		mini->commands = ft_split(mini->args2[mini->arg], ' ');
+		pid = fork();
+		if (pid == 0)
 		{
-			i = 0;
-			while (mini->type[i] == '>' || mini->type[i] == ',')
-			{
-				mini->arg++;
-				mini->type = mini->type + 1;
-				i++;
-			}
-			mini->type = mini->type + 1;
-			ft_redir(mini, env);
+			close(fd[0][1]);
+			dup2(fd[0][0], 0);
+			close(fd[0][0]);
+			ft_exe(mini->commands[0], mini->commands, env);
 		}
+		else
+			wait(NULL);
+		free(fd[0]);
 	}
 }
 
@@ -61,11 +73,11 @@ int			ft_open_file(t_args *mini, int i)
 	while (mini->type[i] == ',' || mini->type[i] == '>')
 	{
 		if (mini->type[i] == ',')
-			fd_file = open(ft_strtrim(mini->args2[i + mini->arg  + 1], " "), O_CREAT
-			| O_WRONLY | O_APPEND, S_IRWXU);
+			fd_file = open(ft_strtrim(mini->args2[i + mini->arg  + 1], " "),
+			O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
 		else
-			fd_file = open(ft_strtrim(mini->args2[i + mini->arg + 1], " "), O_CREAT
-			| O_WRONLY | O_TRUNC, S_IRWXU);
+			fd_file = open(ft_strtrim(mini->args2[i + mini->arg + 1], " "),
+			O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
 		i++;
 	}
 	mini->type = mini->type + i;
@@ -213,6 +225,11 @@ void		ft_read_command(char **env, t_args *mini)
 		if (mini->type[0] == 0)
 		{
 			mini->commands = ft_split(mini->args2[0], ' ');
+			if (!ft_strcmp("exit", ft_substr(mini->commands[0], 0, 4)))
+			{
+				write(1, "exit\n", 5);
+				exit(0);
+			}
 			childpid = fork();
 			if (childpid >= 0)
 			{

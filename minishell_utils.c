@@ -6,55 +6,33 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/01/28 14:58:00 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/04 16:58:07 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_pipe(t_args *mini, char *s)
-{
-	int		i;
-	char	**p_chain;
-
-	mini = 0;
-	i = 0;
-	p_chain = ft_split(s, '|');
-	//while (p_chain[i])
-	//{
-	//	write(1, p_chain[i], ft_strlen(p_chain[i]));
-	//	write(1, "p", 1);
-	//	i++;
-	//}
-}
-/*
-void		ft_redir(t_args *mini, char *s)
-{
-	int		i;
-	char	**p_chain;
-
-	mini = 0;
-	i = 0;
-	p_chain = ft_split(s, '>');
-	//while (p_chain[i])
-	//{
-	//	write(1, p_chain[i], ft_strlen(p_chain[i]));
-	//	write(1, "p", 1);
-	//	i++;
-	//}
-}*/
-
-void		ft_exe(char *func, char **argu, char **env)
+int		ft_exe(char *func, char **argu, char **env)
 {
 	int		i;
 	char	**paths;
 	char	*p;
-	int		j;
 
 	i = 0;
-	j = 1;
+	if (argu[0][0] == '/')
+		execve(argu[0], argu, env);
 	while (env[i])
 	{
+		if (argu[1][0] == '$' || (argu[1][0] == '\"' && argu[1][1] == '$'))
+		{
+			if (argu[1][1] == '$')
+				if (!ft_strcmp(ft_substr(argu[1], 2, ft_strlen(argu[1]) - 3),
+				ft_split(env[i], '=')[0]))
+					argu[1] = ft_split(env[i], '=')[1];
+			if (!ft_strcmp(ft_substr(argu[1], 1, ft_strlen(argu[1]) - 1),
+			ft_split(env[i], '=')[0]))
+				argu[1] = ft_split(env[i], '=')[1];
+		}
 		if (!ft_strcmp("PATH", ft_substr(env[i], 0, 4)))
 			paths = ft_split(env[i], ':');
 		i++;
@@ -70,7 +48,7 @@ void		ft_exe(char *func, char **argu, char **env)
 		p = 0;
 		free(p);
 	}
-	return ;
+	return (1);
 }
 
 static size_t	ft_remove_char(char c, char *set)
