@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/04 15:47:25 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/05 17:23:32 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ typedef struct	s_args
 	int			in;
 	int			out;
 	int			arg;
+	int			fd;
 }				t_args;
 
 char			**ft_split(char *s, char c);
 char			**ft_split2(char *s, t_args *mini);
 int				ft_strcmp(const char *s1, const char *s2);
 char 			**ft_argu(char *arg);
-int				ft_exe(char *func, char **argu, char **env);
+int				ft_exe(char *func, char **argu, char **env, t_args *mini);
 void			ft_read_command(char **env, t_args *mini);
 int				ft_subpro(t_args *mini, char **env);
 char			*ft_strtrim(char const *s1, char const *set);
