@@ -6,64 +6,91 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/08 17:59:36 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/10 19:56:26 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_echo(t_args *mini, char **env)
+void	ft_echo(char **argu)
 {
-	char *s;
+	int i;
 	int	opt;
 
 	opt = 0;
-	s = ft_strtrim(ft_substr(mini->args2[mini->arg], 5,
-	ft_strlen(mini->args2[mini->arg]) - 5), " ");
-	if (s[0] == '-' && s[1] == 'n')
-	{
+	if (!ft_strcmp(argu[1], "-n"))
 		opt = 1;
-		s = s + 2;
-		s = ft_strtrim(s, " ");
+	i = opt + 1;
+	if (argu[i])
+	{
+		write(1, argu[i], ft_strlen(argu[i]));
+		i++;
 	}
-	write(1, s, ft_strlen(s));
-	env = 0;
+	while (argu[i])
+	{
+		write(1, " ", 1);
+		write(1, argu[i], ft_strlen(argu[i]));
+		i++;
+	}
 	if (!opt)
 		write(1, "\n", 1);
-	free(s);
 }
 
-int		ft_exe(char *func, char **argu, char **env, t_args *mini)
+void	ft_pwd(char **env)
+{
+	char *pwd;
+	int i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (!ft_strcmp("PWD", ft_substr(env[i], 0, 3)))
+			pwd = ft_split(env[i], '=')[1];
+		i++;
+	}
+	write(1, pwd, ft_strlen(pwd));
+	write(1, "\n", 1);
+}
+
+int		ft_exe(char *func, char **argu, char **env)
 {
 	int		i;
 	char	**paths;
 	char	*p;
+	int		j;
 
 	i = 0;
-
+	j = 1;
 	if (argu[0][0] == '/')
 		execve(argu[0], argu, env);
-	if (!ft_strcmp("echo", argu[0]))
-	{
-		ft_echo(mini, env);
-		exit(0);
-	}
+	if (argu[1] && (argu[1][0] == '-'))
+		j = 2;
 	while (env[i])
 	{
-		if (argu[1] && (argu[1][0] == '$' ||
-		(argu[1][0] == '\"' && argu[1][1] == '$')))
+		if (argu[j] && (argu[j][0] == '$' ||
+		(argu[j][0] == '\"' && argu[j][1] == '$')))
 		{
-			if (argu[1][1] == '$')
-				if (!ft_strcmp(ft_substr(argu[1], 2, ft_strlen(argu[1]) - 3),
+			if (argu[j][1] == '$')
+				if (!ft_strcmp(ft_substr(argu[j], 2, ft_strlen(argu[j]) - 3),
 				ft_split(env[i], '=')[0]))
-					argu[1] = ft_split(env[i], '=')[1];
-			if (!ft_strcmp(ft_substr(argu[1], 1, ft_strlen(argu[1]) - 1),
+					argu[j] = ft_split(env[i], '=')[1];
+			if (!ft_strcmp(ft_substr(argu[j], 1, ft_strlen(argu[j]) - 1),
 			ft_split(env[i], '=')[0]))
-				argu[1] = ft_split(env[i], '=')[1];
+				argu[j] = ft_split(env[i], '=')[1];
 		}
 		if (!ft_strcmp("PATH", ft_substr(env[i], 0, 4)))
 			paths = ft_split(env[i], ':');
 		i++;
+	}
+	if (!ft_strcmp("echo", argu[0]))
+	{
+		ft_echo(argu);
+		exit(0);
+	}
+	else if (!ft_strcmp("pwd", argu[0]))
+	{
+		ft_pwd(env);
+		exit(0);
 	}
 	i = 0;
 	while (paths[i])
