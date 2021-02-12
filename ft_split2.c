@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/04 17:28:37 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/12 19:34:27 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,9 +115,10 @@ static unsigned int ft_loop(char *s, char **str, char *type)
 		}
 		i++;
 	}
-	//type[i] = '\0';
+	type[i] = '\0';
 	return (i);
 }
+
 char                **ft_split2(char *s, t_args *mini)
 {
 	char            **str;

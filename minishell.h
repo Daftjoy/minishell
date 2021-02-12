@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/10 19:59:08 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/12 17:21:46 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #  include <stdlib.h>
 #  include <string.h>
 #  include "get_next_line.h"
+#  include <dirent.h>
 
 typedef struct	s_args
 {
@@ -48,7 +49,8 @@ void			ft_only_redir(t_args *mini, char **env);
 int				ft_open_file(t_args	*mini, int i);
 void			ft_redir(t_args *mini, char **env);
 void			ft_input(t_args *mini, char **env);
-void			ft_pwd(char **env);
+char			*ft_pwd(int opt);
+void			ft_error(void);
 
 # endif
 #endif

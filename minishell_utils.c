@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/10 19:56:26 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/12 19:52:21 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,19 @@ void	ft_echo(char **argu)
 		write(1, "\n", 1);
 }
 
-void	ft_pwd(char **env)
+char	*ft_pwd(int opt)
 {
 	char *pwd;
-	int i;
 
-	i = 0;
-	while (env[i])
+	pwd = malloc(100);
+	getcwd(pwd, 100);
+	if (opt == 0)
 	{
-		if (!ft_strcmp("PWD", ft_substr(env[i], 0, 3)))
-			pwd = ft_split(env[i], '=')[1];
-		i++;
+		write(1, pwd, ft_strlen(pwd));
+		write(1, "\n", 1);
 	}
-	write(1, pwd, ft_strlen(pwd));
-	write(1, "\n", 1);
+	free(pwd);
+	return (pwd);
 }
 
 int		ft_exe(char *func, char **argu, char **env)
@@ -58,13 +57,16 @@ int		ft_exe(char *func, char **argu, char **env)
 	char	**paths;
 	char	*p;
 	int		j;
+	int		bool;
 
 	i = 0;
 	j = 1;
+	bool = 0;
 	if (argu[0][0] == '/')
 		execve(argu[0], argu, env);
 	if (argu[1] && (argu[1][0] == '-'))
 		j = 2;
+	i = 0;
 	while (env[i])
 	{
 		if (argu[j] && (argu[j][0] == '$' ||
@@ -89,7 +91,7 @@ int		ft_exe(char *func, char **argu, char **env)
 	}
 	else if (!ft_strcmp("pwd", argu[0]))
 	{
-		ft_pwd(env);
+		ft_pwd(0);
 		exit(0);
 	}
 	i = 0;
@@ -98,11 +100,14 @@ int		ft_exe(char *func, char **argu, char **env)
 		p = malloc(100);
 		p = ft_strjoin(paths[i], "/");
 		p = ft_strjoin(p, func);
-		execve(p, argu, env);
+		if ((execve(p, argu, env)) > 0)
+			bool = 1;
 		i++;
 		p = 0;
 		free(p);
 	}
+	if (bool == 0)
+		ft_error();
 	return (1);
 }
 

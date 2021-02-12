@@ -1,4 +1,4 @@
-SRCS	=	ft_split.c ft_split2.c ft_strcmp.c get_next_line.c get_next_line_utils.c minishell.c minishell_utils.c
+SRCS	=	ft_split.c ft_split2.c ft_strcmp.c get_next_line.c get_next_line_utils.c minishell.c minishell_utils.c minishell_utils2.c
 
 OBJS =	$(SRCS:.c=.o)
 

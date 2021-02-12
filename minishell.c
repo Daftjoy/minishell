@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/10 20:03:35 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/12 19:52:06 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int			ft_open_file(t_args *mini, int i)
 	while (mini->type[mini->arg] == ',' || mini->type[mini->arg] == '>')
 	{
 		if (mini->type[mini->arg] == ',')
-			fd_file = open(ft_strtrim(mini->args2[mini->arg  + 1], " "),
+			fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
 			O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
 		else
 			fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
@@ -92,7 +92,6 @@ void		ft_move_pos(t_args *mini ,int  i)
 		i++;
 	}
 	mini->type = mini->type + i;
-	//mini->arg = mini->arg + i + 1 - j;
 }
 
 
@@ -110,8 +109,6 @@ void		ft_only_redir(t_args *mini, char **env)
 	}
 	else
 		wait(NULL);
-	//ft_move_pos(mini, 0);
-	//printf("mini->arg%d\n mini->type%s\n", mini->arg, mini->type);
 	if (mini->type[mini->arg] == '|')
 	{
 		mini->arg++;
@@ -123,7 +120,6 @@ void		ft_redir(t_args *mini, char **env)
 {
 	int pid;
 
-	//printf("mini->type%s\n mini->arg%d\n", mini->type, mini->arg);
 	mini->commands = ft_split(mini->args2[mini->arg], ' ');
 	if (mini->type[mini->arg] == ',' || mini->type[mini->arg] == '>')
 		ft_only_redir(mini, env);
@@ -154,7 +150,6 @@ int			ft_subpro(t_args *mini, char **env)
 
 	i = 0;
 	pipe_numb = 0;
-	//printf("mini->args2%s\n", mini->args2[mini->arg]);
 	while (mini->type[pipe_numb + mini->arg] == '|')
 		pipe_numb++;
 	fd = malloc(pipe_numb * sizeof(int *));
@@ -220,7 +215,6 @@ int			ft_subpro(t_args *mini, char **env)
 		i++;
 	}
 	free(fd);
-	//printf("mini->arg%d\n mini->type%s\n", mini->arg, mini->type);
 	if (mini->type[mini->arg] == '|')
 	{
 		mini->arg++;
@@ -234,11 +228,12 @@ void		ft_read_command(char **env, t_args *mini)
 	int		i;
 	pid_t	childpid;
 	char	*pwd;
-	int		j;
 
 	i = -1;
+
 	while (mini->args[++i])
 	{
+
 		mini->args2 = ft_split2(mini->args[i], mini);
 		mini->arg = 0;
 		if (mini->type[0] == 0)
@@ -251,16 +246,20 @@ void		ft_read_command(char **env, t_args *mini)
 			}
 			else if (!ft_strcmp("cd", mini->commands[0]))
 			{
-				j = 0;
-				pwd = 0;
-				while (env[j])
+				if (mini->commands[1] && mini->commands[1][0] == '/')
 				{
-					if (!ft_strcmp("PWD", ft_substr(env[j], 0, 3)))
-						pwd = ft_split(env[j], '=')[1];
-					j++;
+					pwd = mini->commands[1];
+					if (!(opendir(pwd)))
+						ft_error();
 				}
-				pwd = ft_strjoin(pwd, "/");
-				chdir(ft_strjoin(pwd, mini->commands[1]));
+				else
+				{
+					pwd = ft_strjoin(ft_strjoin(ft_pwd(1), "/"),
+					mini->commands[1]);
+					if (!(opendir(pwd)))
+						ft_error();
+				}
+				chdir(pwd);
 				continue ;
 			}
 			childpid = fork();
@@ -280,6 +279,8 @@ void		ft_read_command(char **env, t_args *mini)
 void		ft_loop(char **env)
 {
 	t_args	*mini;
+	int		i;
+	char	**env2;
 
 	mini = malloc(sizeof(t_args));
 	mini->main_chain = 0;
@@ -287,19 +288,32 @@ void		ft_loop(char **env)
 	mini->in = dup(0);
 	mini->out = dup(1);
 	write(1, "... ", 4);
+	i = 0;
+	while (env[i])
+		i++;
+	env2 = malloc(sizeof(char *) * i);
+	i = 0;
+	while (env[i])
+	{
+		env2[i] = ft_strdup(env[i]);
+		i++;
+	}
+	env2[i] = 0;
 	while (get_next_line(0, &mini->main_chain))
 	{
 		mini->args = ft_split(mini->main_chain, ';');
-		ft_read_command(env, mini);
+		ft_read_command(env2, mini);
 		write(1, "... ", 4);
 		free(mini->main_chain);
 	}
+	free(env2);
 }
 
 int			main(int argc, char **argv, char **env)
 {
 	(void)argc;
 	(void)argv;
+
 	ft_loop(env);
 	return (0);
 }
