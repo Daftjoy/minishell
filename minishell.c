@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/12 19:52:06 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/15 18:14:58 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,19 +226,73 @@ int			ft_subpro(t_args *mini, char **env)
 void		ft_read_command(char **env, t_args *mini)
 {
 	int		i;
+	int		j;
 	pid_t	childpid;
 	char	*pwd;
+	int		k;
 
 	i = -1;
-
 	while (mini->args[++i])
 	{
-
 		mini->args2 = ft_split2(mini->args[i], mini);
 		mini->arg = 0;
 		if (mini->type[0] == 0)
 		{
 			mini->commands = ft_split(mini->args2[0], ' ');
+			if (!(ft_strcmp("export", mini->commands[0])) && mini->commands[1])
+			{
+				j = 0;
+				k = 1;
+				while (mini->commands[k] && ft_strchr(mini->commands[k], '=')
+				&& mini->commands[k][0] != '=')
+				{
+					while (env[j])
+					{
+						if (ft_strchr(env[j], '=') && ft_split(env[j], '=')
+						&& (!(ft_strcmp(ft_split(env[j], '=')[0],
+						ft_split(mini->commands[k], '=')[0]))))
+						{
+							free(env[j]);
+							env[j] = ft_strdup(mini->commands[k]);
+							break ;
+						}
+						j++;
+					}
+					if (!env[j])
+					{
+						env[j] = ft_strdup(mini->commands[k]);
+						env[++j] = 0;
+					}
+					k++;
+				}
+				continue ;
+			}
+			if (!(ft_strcmp("unset", mini->commands[0])) && mini->commands[1])
+			{
+				j = 0;
+				while (env[j])
+				{
+					if (ft_strchr(env[j], '=') && ft_split(env[j], '=') &&
+					(!(ft_strcmp(ft_split(env[j], '=')[0],
+					ft_split(mini->commands[1], '=')[0]))))
+					{
+						while (env[j])
+						{
+							if (env[j + 1])
+							{
+								free(env[j]);
+								env[j] = ft_strdup(env[j + 1]);
+							}
+							else
+								env[j] = 0;
+							j++;
+						}
+						break ;
+					}
+					j++;
+				}
+				continue ;
+			}
 			if (!ft_strcmp("exit", mini->commands[0]))
 			{
 				write(1, "exit\n", 5);
