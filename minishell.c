@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/15 18:14:58 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/16 16:21:04 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,55 +241,43 @@ void		ft_read_command(char **env, t_args *mini)
 			mini->commands = ft_split(mini->args2[0], ' ');
 			if (!(ft_strcmp("export", mini->commands[0])) && mini->commands[1])
 			{
-				j = 0;
 				k = 1;
 				while (mini->commands[k] && ft_strchr(mini->commands[k], '=')
 				&& mini->commands[k][0] != '=')
 				{
-					while (env[j])
-					{
-						if (ft_strchr(env[j], '=') && ft_split(env[j], '=')
-						&& (!(ft_strcmp(ft_split(env[j], '=')[0],
-						ft_split(mini->commands[k], '=')[0]))))
-						{
-							free(env[j]);
-							env[j] = ft_strdup(mini->commands[k]);
-							break ;
-						}
-						j++;
-					}
-					if (!env[j])
-					{
-						env[j] = ft_strdup(mini->commands[k]);
-						env[++j] = 0;
-					}
+					env = ft_export(env, mini->commands[k]);
 					k++;
 				}
 				continue ;
 			}
 			if (!(ft_strcmp("unset", mini->commands[0])) && mini->commands[1])
 			{
-				j = 0;
-				while (env[j])
+				k = 1;
+				while (mini->commands[k])
 				{
-					if (ft_strchr(env[j], '=') && ft_split(env[j], '=') &&
-					(!(ft_strcmp(ft_split(env[j], '=')[0],
-					ft_split(mini->commands[1], '=')[0]))))
+					j = 0;
+					while (env[j])
 					{
-						while (env[j])
+						if (ft_strchr(env[j], '=') && ft_split(env[j], '=') &&
+						(!(ft_strcmp(ft_split(env[j], '=')[0],
+						ft_split(mini->commands[k], '=')[0]))))
 						{
-							if (env[j + 1])
+							while (env[j])
 							{
-								free(env[j]);
-								env[j] = ft_strdup(env[j + 1]);
+								if (env[j + 1])
+								{
+									free(env[j]);
+									env[j] = ft_strdup(env[j + 1]);
+								}
+								else
+									env[j] = 0;
+								j++;
 							}
-							else
-								env[j] = 0;
-							j++;
+							break ;
 						}
-						break ;
+						j++;
 					}
-					j++;
+					k++;
 				}
 				continue ;
 			}
@@ -313,7 +301,9 @@ void		ft_read_command(char **env, t_args *mini)
 					if (!(opendir(pwd)))
 						ft_error();
 				}
+				env = ft_export(env, ft_strjoin("OLDPWD=", ft_pwd(1)));
 				chdir(pwd);
+				env = ft_export(env, ft_strjoin("PWD=", ft_pwd(1)));
 				continue ;
 			}
 			childpid = fork();

@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/12 19:52:21 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/17 16:38:29 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int		ft_exe(char *func, char **argu, char **env)
 	i = 0;
 	j = 1;
 	bool = 0;
+	argu = ft_parser(argu, env);
+	//printf("%s\n", argu[1]);
 	if (argu[0][0] == '/')
 		execve(argu[0], argu, env);
 	if (argu[1] && (argu[1][0] == '-'))
@@ -69,19 +71,22 @@ int		ft_exe(char *func, char **argu, char **env)
 	i = 0;
 	while (env[i])
 	{
-		if (argu[j] && (argu[j][0] == '$' ||
-		(argu[j][0] == '\"' && argu[j][1] == '$')))
+		if (ft_strchr(env[i], '='))
 		{
-			if (argu[j][1] == '$')
-				if (!ft_strcmp(ft_substr(argu[j], 2, ft_strlen(argu[j]) - 3),
+			/*if (argu[j] && (argu[j][0] == '$' ||
+			(argu[j][0] == '\"' && argu[j][1] == '$')))
+			{
+				if (argu[j][1] == '$')
+					if (!ft_strcmp(ft_substr(argu[j], 2, ft_strlen(argu[j]) - 3),
+					ft_split(env[i], '=')[0]))
+						argu[j] = ft_split(env[i], '=')[1];
+				if (!ft_strcmp(ft_substr(argu[j], 1, ft_strlen(argu[j]) - 1),
 				ft_split(env[i], '=')[0]))
 					argu[j] = ft_split(env[i], '=')[1];
-			if (!ft_strcmp(ft_substr(argu[j], 1, ft_strlen(argu[j]) - 1),
-			ft_split(env[i], '=')[0]))
-				argu[j] = ft_split(env[i], '=')[1];
+			}*/
+			if (!ft_strcmp("PATH", ft_substr(env[i], 0, 4)))
+				paths = ft_split(env[i], ':');
 		}
-		if (!ft_strcmp("PATH", ft_substr(env[i], 0, 4)))
-			paths = ft_split(env[i], ':');
 		i++;
 	}
 	if (!ft_strcmp("echo", argu[0]))
