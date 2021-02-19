@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/12 19:34:27 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/19 17:28:17 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,22 @@ static unsigned int ft_wcount(char const *s)
 {
 	unsigned int    w;
 	char            *str;
+	int				n;
+	int				i;
+
 	w = 1;
 	str = (char *)s;
 	if (ft_strchr(str, '\"'))
 	{
-		str = ft_strchr(str, '\"') + 1;
-		if (!ft_strchr(str, '\"'))
+		n = 0;
+		i = 0;
+		while (s[i])
+		{
+			if (s[i] == '\"')
+				n++;
+			i++;
+		}
+		if (n % 2 != 0)
 		{
 			write(1, "No double quotes", 17);
 			exit(0);
@@ -58,10 +68,11 @@ static unsigned int ft_wcount(char const *s)
 		}
 		else
 		{
-			str = ft_strchr(str, '\"') + 1;
-			if (!ft_strchr(str, '\"'))
-				write(1, "No double quotes", 17);
-			str = ft_strchr(str, '\"') + 1;
+			while (n > 0 && ft_strchr(str, '\"') < ft_find(str))
+			{
+				str = ft_strchr(str, '\"') + 1;
+				n--;
+			}
 		}
 	}
 	return (w);

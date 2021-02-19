@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/17 19:18:24 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/19 17:33:41 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ char	**ft_parser(char **argu, char **env)
 	i = 1;
 	while (argu[i])
 	{
+		//printf("%s\n", argu[i]);
 		if (ft_strchr(argu[i], '\"') && (!(ft_strchr(argu[i], '\'')) ||
 		(ft_strchr(argu[i], '\"') < ft_strchr(argu[i], '\''))))
 			argu[i] = ft_dquotes(env, argu[i]);
@@ -85,7 +86,7 @@ char	*ft_dquotes(char **env, char *argu)
 	int j;
 	int k;
 
-	str = malloc(ft_count(argu, '$', '\"'));
+	str = malloc(ft_count(argu, 0));
 	i = 0;
 	k = 0;
 	while (argu[i])
@@ -101,12 +102,13 @@ char	*ft_dquotes(char **env, char *argu)
 			ret = ft_strjoin(ret, ft_find_var(env,
 			ft_substr(&argu[i], 1, j - 1)));
 			free(str);
-			i += j;
-			str = malloc(ft_count(&argu[i], '$', '\"'));
+			i += j - 1;
+			str = malloc(ft_count(&argu[i], 0));
 			k = 0;
 		}
-		else
+		else if (argu[i] != '\"')
 		{
+			//printf("-----> %c\n", argu[i]);
 			str[k] = argu[i];
 			k++;
 		}
@@ -122,19 +124,29 @@ char	*ft_squotes(char **env, char *argu)
 	env = 0;
 	return (argu);
 }
-int		ft_count(char *str, char c, char opt)
+int		ft_count(char *str, int opt)
 {
 	int i;
 	int j;
 
 	i = 0;
 	j = 0;
-	while (str[i + j] && str[i + j] != c)
-	{
-		if (str[i + j] != opt)
-			i++;
-		else
-			j++;
-	}
+	if (opt)
+		while (str[i + j] && str[i + j] != '$')
+		{
+			if (str[i + j] != '\'')
+				i++;
+			else
+				j++;
+		}
+	else
+		while (str[i + j] && str[i + j] != '$')
+		{
+			if (str[i + j] != '\"')
+				i++;
+			else
+				j++;
+		}
+	printf("i : %d\n", i);
 	return (i);
 }

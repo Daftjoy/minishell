@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/15 17:26:47 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/19 18:03:47 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,22 @@
 
 static unsigned int	ft_wcount(char const *s, char c)
 {
-	unsigned int n;
-	unsigned int w;
+	unsigned int	n;
+	unsigned int	w;
+	int				i;
+	int				k;
 
 	n = 0;
 	w = 0;
+	i = 0;
+	k = 0;
+	if (ft_strchr(s, '\"'))
+		while (s[i])
+		{
+			if (s[i] == '\"')
+				k++;
+			i++;
+		}
 	while (*(s + n))
 	{
 		if (*(s + n) == c)
@@ -32,8 +43,12 @@ static unsigned int	ft_wcount(char const *s, char c)
 			if (*(s + n) == '\"')
 			{
 				n++;
-				while (s[n] != '\"' && s[n])
+				while (s[n] && k > 1)
+				{
+					if (s[n] == '\"')
+						k--;
 					n++;
+				}
 			}
 			n++;
 		}
@@ -43,17 +58,31 @@ static unsigned int	ft_wcount(char const *s, char c)
 
 static unsigned int	ft_lcount(char const *s, char c, unsigned int n)
 {
-	unsigned int k;
+	unsigned int	k;
+	int				i;
+	int				j;
 
 	k = 0;
+	i = 0;
+	j = 0;
+	if (ft_strchr(s, '\"'))
+		while (s[i])
+		{
+			if (s[i] == '\"')
+				j++;
+			i++;
+		}
 	while (*(s + n) != c && *(s + n))
 	{
 		if (*(s + n) == '\"')
 		{
 			k++;
-			while (s[++n] != '\"' && s[n])
+			while (j > 0 && s[n])
 			{
+				if (s[n] == '\"')
+					j--;
 				k++;
+				n++;
 			}
 		}
 		k++;
