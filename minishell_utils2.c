@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/19 17:33:41 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/23 16:58:57 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_find_var(char **env, char *var)
 	char	*str;
 
 	i = 0;
+	//printf("%s\n", var);
+	str = 0;
 	while (env[i])
 	{
 		if (!ft_strcmp(var, ft_split(env[i], '=')[0]))
@@ -98,9 +100,12 @@ char	*ft_dquotes(char **env, char *argu)
 			&& argu[i + j] != '\'')
 				j++;
 			str[k] = '\0';
-			ret = ret ? ft_strjoin(ret, str) : str;
-			ret = ft_strjoin(ret, ft_find_var(env,
-			ft_substr(&argu[i], 1, j - 1)));
+			ret = ret ? ft_strjoin(ret, str) : ft_strdup(str);
+			if (!ft_find_var(env, ft_substr(&argu[i], 1, j - 1)))
+				ret = ft_strjoin(ret, ft_substr(&argu[i], 0, j));
+			else
+				ret = ft_strjoin(ret, ft_find_var(env,
+				ft_substr(&argu[i], 1, j - 1)));
 			free(str);
 			i += j - 1;
 			str = malloc(ft_count(&argu[i], 0));

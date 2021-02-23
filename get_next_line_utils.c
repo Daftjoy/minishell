@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 19:43:26 by antmarti          #+#    #+#             */
-/*   Updated: 2020/12/09 18:22:23 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/23 16:57:38 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ char    *ft_substr(char const *s, unsigned int start, size_t len)
 		i++;
 	}
 	dest[i] = '\0';
+	//printf("SUBSTR-> %s\n", dest);
 	return (dest);
 }
 
