@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 19:43:26 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/23 16:57:38 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/24 20:34:52 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ char    *ft_substr(char const *s, unsigned int start, size_t len)
 		i++;
 	}
 	dest[i] = '\0';
-	//printf("SUBSTR-> %s\n", dest);
 	return (dest);
 }
 

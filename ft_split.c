@@ -3,91 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/23 17:32:22 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/24 20:15:27 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int			ft_quotes(int doble, int single, int n, const char *s)
+{
+	int i;
+
+	i = 0;
+	if (s[n + i] == '\"' || s[n + i] == '\'')
+	{
+		if (s[n + i] == '\"')
+		{
+			doble = 1;
+			single = 0;
+		}
+		else
+		{
+			doble = 0;
+			single = 1;
+		}
+		i++;
+		while (s[n + i] && (doble || single))
+		{
+			if (s[n + i] == '\"')
+				doble = !doble ? 1 : doble--;
+			else if (s[n + i] == '\'')
+				single = !single ? 1 : single--;
+			i++;
+		}
+	}
+	return (i);
+}
+
 static unsigned int	ft_wcount(char const *s, char c)
 {
 	unsigned int	n;
 	unsigned int	w;
-	int				i;
 	int				k;
 
 	n = 0;
 	w = 0;
-	i = 0;
 	k = 0;
-	if (ft_strchr(s, '\"'))
-		while (s[i])
-		{
-			if (s[i] == '\"')
-				k++;
-			i++;
-		}
-	while (*(s + n))
+	while (s[n])
 	{
-		if (*(s + n) == c)
+		if (s[n] == c)
 		{
 			n++;
 			continue ;
 		}
 		w++;
-		while ((*(s + n) != c) && *(s + n))
+		while (s[n] != c && s[n])
 		{
-			if (*(s + n) == '\"')
-			{
-				while (s[n] && k > 1)
-				{
-					n++;
-					if (s[n] == '\"')
-						k--;
-				}
-			}
+			n += ft_quotes(0, 0, n, s);
 			n++;
 		}
 	}
-	//printf("------>%s\nw----->%d\n",s, w);
 	return (w);
 }
 
 static unsigned int	ft_lcount(char const *s, char c, unsigned int n)
 {
 	unsigned int	k;
-	int				i;
-	int				j;
 
 	k = 0;
-	i = 0;
-	j = 0;
-	if (ft_strchr(s, '\"'))
-		while (s[i])
-		{
-			if (s[i] == '\"')
-				j++;
-			i++;
-		}
-	while (*(s + n) != c && *(s + n))
+	while (s[n] != c && s[n])
 	{
-		if (*(s + n) == '\"')
-		{
-			while (j > 1 && s[n])
-			{
-				n++;
-				if (s[n] == '\"')
-					j--;
-				k++;
-			}
-		}
-		k++;
+		k += ft_quotes(0, 0, n, s);
+		n += ft_quotes(0, 0, n, s);
 		n++;
+		k++;
 	}
-	printf("---->%s\n---->%d\n",s, k);
 	return (k);
 }
 

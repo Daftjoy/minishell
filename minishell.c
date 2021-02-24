@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/16 16:21:04 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/24 17:52:17 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,7 +357,6 @@ int			main(int argc, char **argv, char **env)
 {
 	(void)argc;
 	(void)argv;
-
 	ft_loop(env);
 	return (0);
 }

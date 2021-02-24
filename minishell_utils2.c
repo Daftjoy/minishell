@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/23 16:58:57 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/24 20:43:37 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ char	*ft_find_var(char **env, char *var)
 	char	*str;
 
 	i = 0;
-	//printf("%s\n", var);
 	str = 0;
+	printf("ENTROOOOO\n");
 	while (env[i])
 	{
 		if (!ft_strcmp(var, ft_split(env[i], '=')[0]))
@@ -68,19 +68,20 @@ char	**ft_parser(char **argu, char **env)
 	i = 1;
 	while (argu[i])
 	{
-		//printf("%s\n", argu[i]);
 		if (ft_strchr(argu[i], '\"') && (!(ft_strchr(argu[i], '\'')) ||
 		(ft_strchr(argu[i], '\"') < ft_strchr(argu[i], '\''))))
-			argu[i] = ft_dquotes(env, argu[i]);
-		/*else if (ft_strchr(argu[i], '\'') && (!(ft_strchr(argu[i], '\"')) ||
+			argu[i] = ft_dquotes(env, argu[i], 0);
+		else if (ft_strchr(argu[i], '\'') && (!(ft_strchr(argu[i], '\"')) ||
 		(ft_strchr(argu[i], '\'') < ft_strchr(argu[i], '\"'))))
-			argu[i] = ft_squotes(env, argu[i]);*/
+			argu[i] = ft_squotes(argu[i]);
+		else
+			argu[i] = ft_dquotes(env, argu[i], 1);
 		i++;
 	}
 	return (argu);
 }
 
-char	*ft_dquotes(char **env, char *argu)
+char	*ft_dquotes(char **env, char *argu, int opt)
 {
 	char *str;
 	char *ret;
@@ -88,6 +89,7 @@ char	*ft_dquotes(char **env, char *argu)
 	int j;
 	int k;
 
+	ret = 0;
 	str = malloc(ft_count(argu, 0));
 	i = 0;
 	k = 0;
@@ -111,9 +113,8 @@ char	*ft_dquotes(char **env, char *argu)
 			str = malloc(ft_count(&argu[i], 0));
 			k = 0;
 		}
-		else if (argu[i] != '\"')
+		else if (argu[i] != '\"' || opt)
 		{
-			//printf("-----> %c\n", argu[i]);
 			str[k] = argu[i];
 			k++;
 		}
@@ -124,10 +125,26 @@ char	*ft_dquotes(char **env, char *argu)
 	return (ret);
 }
 
-char	*ft_squotes(char **env, char *argu)
+char	*ft_squotes(char *argu)
 {
-	env = 0;
-	return (argu);
+	char *str;
+	int i;
+	int k;
+
+	i = 0;
+	k = 0;
+	str = malloc(ft_count(argu, 1));
+	while (argu[i])
+	{
+		if (argu[i] != '\'')
+		{
+			str[k] = argu[i];
+			k++;
+		}
+		i++;
+	}
+	str[k] = '\0';
+	return (str);
 }
 int		ft_count(char *str, int opt)
 {
@@ -137,7 +154,7 @@ int		ft_count(char *str, int opt)
 	i = 0;
 	j = 0;
 	if (opt)
-		while (str[i + j] && str[i + j] != '$')
+		while (str[i + j])
 		{
 			if (str[i + j] != '\'')
 				i++;
@@ -152,6 +169,6 @@ int		ft_count(char *str, int opt)
 			else
 				j++;
 		}
-	printf("i : %d\n", i);
+	printf("%d\n", i);
 	return (i);
 }

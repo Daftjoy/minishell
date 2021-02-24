@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/19 16:25:16 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/24 20:31:05 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ void			ft_error(void);
 char 			**ft_export(char **env, char *var);
 char			**ft_parser(char **argu, char **env);
 int				ft_count(char *str, int opt);
-char			*ft_squotes(char **env, char *argu);
-char			*ft_dquotes(char **env, char *argu);
+char			*ft_squotes(char *argu);
+char			*ft_dquotes(char **env, char *argu, int opt);
 char			*ft_find_var(char **env, char *var);
 # endif
 #endif

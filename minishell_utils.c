@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/23 17:29:54 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/02/24 20:18:28 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ int		ft_exe(char *func, char **argu, char **env)
 				ft_split(env[i], '=')[0]))
 					argu[j] = ft_split(env[i], '=')[1];
 			}*/
-			/*if (!ft_strcmp("PATH", ft_substr(env[i], 0, 4)))
-				paths = ft_split(env[i], ':');*/
+			if (!ft_strcmp("PATH", ft_substr(env[i], 0, 4)))
+				paths = ft_split(env[i], ':');
 		}
 		i++;
 	}
