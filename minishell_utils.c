@@ -6,7 +6,7 @@
 /*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/24 20:18:28 by agianico         ###   ########.fr       */
+/*   Updated: 2021/02/25 13:27:38 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,17 +73,6 @@ int		ft_exe(char *func, char **argu, char **env)
 	{
 		if (ft_strchr(env[i], '='))
 		{
-			/*if (argu[j] && (argu[j][0] == '$' ||
-			(argu[j][0] == '\"' && argu[j][1] == '$')))
-			{
-				if (argu[j][1] == '$')
-					if (!ft_strcmp(ft_substr(argu[j], 2, ft_strlen(argu[j]) - 3),
-					ft_split(env[i], '=')[0]))
-						argu[j] = ft_split(env[i], '=')[1];
-				if (!ft_strcmp(ft_substr(argu[j], 1, ft_strlen(argu[j]) - 1),
-				ft_split(env[i], '=')[0]))
-					argu[j] = ft_split(env[i], '=')[1];
-			}*/
 			if (!ft_strcmp("PATH", ft_substr(env[i], 0, 4)))
 				paths = ft_split(env[i], ':');
 		}

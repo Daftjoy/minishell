@@ -6,7 +6,7 @@
 /*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/24 20:15:27 by agianico         ###   ########.fr       */
+/*   Updated: 2021/02/25 12:49:19 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ static int			ft_quotes(int doble, int single, int n, const char *s)
 		while (s[n + i] && (doble || single))
 		{
 			if (s[n + i] == '\"')
-				doble = !doble ? 1 : doble--;
+				doble = !doble ? 1 : 0;
 			else if (s[n + i] == '\'')
-				single = !single ? 1 : single--;
+				single = !single ? 1 : 0;
 			i++;
 		}
 	}
@@ -61,8 +61,10 @@ static unsigned int	ft_wcount(char const *s, char c)
 		w++;
 		while (s[n] != c && s[n])
 		{
-			n += ft_quotes(0, 0, n, s);
-			n++;
+			if (ft_quotes(0, 0, n, s))
+				n += ft_quotes(0, 0, n, s);
+			else
+				n++;
 		}
 	}
 	return (w);
@@ -75,10 +77,16 @@ static unsigned int	ft_lcount(char const *s, char c, unsigned int n)
 	k = 0;
 	while (s[n] != c && s[n])
 	{
-		k += ft_quotes(0, 0, n, s);
-		n += ft_quotes(0, 0, n, s);
-		n++;
-		k++;
+		if (ft_quotes(0, 0, n, s))
+		{
+			k += ft_quotes(0, 0, n, s);
+			n += ft_quotes(0, 0, n, s);
+		}
+		else
+		{
+			n++;
+			k++;
+		}
 	}
 	return (k);
 }

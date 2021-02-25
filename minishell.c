@@ -6,7 +6,7 @@
 /*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/24 17:52:17 by agianico         ###   ########.fr       */
+/*   Updated: 2021/02/25 14:48:11 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,6 +331,7 @@ void		ft_loop(char **env)
 	mini->args = 0;
 	mini->in = dup(0);
 	mini->out = dup(1);
+	sig_init(mini);
 	write(1, "... ", 4);
 	i = 0;
 	while (env[i])
@@ -348,6 +349,7 @@ void		ft_loop(char **env)
 		mini->args = ft_split(mini->main_chain, ';');
 		ft_read_command(env2, mini);
 		write(1, "... ", 4);
+		signal(SIGINT, &sig_int);
 		free(mini->main_chain);
 	}
 	free(env2);

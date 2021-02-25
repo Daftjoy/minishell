@@ -6,7 +6,7 @@
 /*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/24 20:31:05 by agianico         ###   ########.fr       */
+/*   Updated: 2021/02/25 14:47:02 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 #  include <unistd.h>
 #  include <stdlib.h>
 #  include <string.h>
-#  include "get_next_line.h"
 #  include <dirent.h>
+#  include <signal.h>
+#  include "get_next_line.h"
 
 typedef struct	s_args
 {
@@ -35,6 +36,9 @@ typedef struct	s_args
 	int			out;
 	int			arg;
 	int			fd;
+	int			sig_int;
+	int			exit_status;
+	pid_t		pid;
 }				t_args;
 
 char			**ft_split(char *s, char c);

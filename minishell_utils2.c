@@ -6,7 +6,7 @@
 /*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/24 20:43:37 by agianico         ###   ########.fr       */
+/*   Updated: 2021/02/25 14:10:40 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ char	*ft_find_var(char **env, char *var)
 
 	i = 0;
 	str = 0;
-	printf("ENTROOOOO\n");
 	while (env[i])
 	{
-		if (!ft_strcmp(var, ft_split(env[i], '=')[0]))
+		if (ft_strchr(env[i], '=') && !ft_strcmp(var, ft_split(env[i], '=')[0]))
 			str = ft_split(env[i], '=')[1];
 		i++;
 	}
@@ -90,7 +89,7 @@ char	*ft_dquotes(char **env, char *argu, int opt)
 	int k;
 
 	ret = 0;
-	str = malloc(ft_count(argu, 0));
+	str = malloc(ft_count(argu, 0) + 1);
 	i = 0;
 	k = 0;
 	while (argu[i])
@@ -98,19 +97,22 @@ char	*ft_dquotes(char **env, char *argu, int opt)
 		if (argu[i] == '$')
 		{
 			j = 0;
-			while (argu[i + j] != ' ' && argu[i + j] != '\"'
+			while (argu[i + j] && argu[i + j] != ' ' && argu[i + j] != '\"'
 			&& argu[i + j] != '\'')
 				j++;
 			str[k] = '\0';
 			ret = ret ? ft_strjoin(ret, str) : ft_strdup(str);
 			if (!ft_find_var(env, ft_substr(&argu[i], 1, j - 1)))
-				ret = ft_strjoin(ret, ft_substr(&argu[i], 0, j));
+				ret = ret ? ft_strjoin(ret, ft_substr(&argu[i], 0, j)) :
+				ft_substr(&argu[i], 0, j);
 			else
-				ret = ft_strjoin(ret, ft_find_var(env,
-				ft_substr(&argu[i], 1, j - 1)));
+				ret = ret ? ft_strjoin(ret, ft_find_var(env,
+				ft_substr(&argu[i], 1, j - 1))) :
+				ft_substr(&argu[i], 1, j - 1);
 			free(str);
+			str = 0;
 			i += j - 1;
-			str = malloc(ft_count(&argu[i], 0));
+			str = malloc(ft_count(&argu[i], 0) + 1);
 			k = 0;
 		}
 		else if (argu[i] != '\"' || opt)
@@ -121,7 +123,9 @@ char	*ft_dquotes(char **env, char *argu, int opt)
 		i++;
 	}
 	str[k] = '\0';
-	ret = ret ? ft_strjoin(ret, str) : str;
+	ret = ret ? ft_strjoin(ret, str) : ft_strdup(str);
+	free(str);
+	str = 0;
 	return (ret);
 }
 
@@ -169,6 +173,6 @@ int		ft_count(char *str, int opt)
 			else
 				j++;
 		}
-	printf("%d\n", i);
+	//printf("%d\n", i);
 	return (i);
 }
