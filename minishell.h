@@ -61,5 +61,10 @@ int				ft_count(char *str, int opt);
 char			*ft_squotes(char *argu);
 char			*ft_dquotes(char **env, char *argu, int opt);
 char			*ft_find_var(char **env, char *var);
+char 			**ft_unset(char **env, t_args *mini);
+char 			**ft_functs(char **env, t_args *mini);
+char 			**ft_cd(char **env, t_args *mini);
+void			ft_runcmmd(char **env, t_args *mini);
+
 # endif
 #endif

@@ -226,10 +226,6 @@ int			ft_subpro(t_args *mini, char **env)
 void		ft_read_command(char **env, t_args *mini)
 {
 	int		i;
-	int		j;
-	pid_t	childpid;
-	char	*pwd;
-	int		k;
 
 	i = -1;
 	while (mini->args[++i])
@@ -239,81 +235,7 @@ void		ft_read_command(char **env, t_args *mini)
 		if (mini->type[0] == 0)
 		{
 			mini->commands = ft_split(mini->args2[0], ' ');
-			if (!(ft_strcmp("export", mini->commands[0])) && mini->commands[1])
-			{
-				k = 1;
-				while (mini->commands[k] && ft_strchr(mini->commands[k], '=')
-				&& mini->commands[k][0] != '=')
-				{
-					env = ft_export(env, mini->commands[k]);
-					k++;
-				}
-				continue ;
-			}
-			if (!(ft_strcmp("unset", mini->commands[0])) && mini->commands[1])
-			{
-				k = 1;
-				while (mini->commands[k])
-				{
-					j = 0;
-					while (env[j])
-					{
-						if (ft_strchr(env[j], '=') && ft_split(env[j], '=') &&
-						(!(ft_strcmp(ft_split(env[j], '=')[0],
-						ft_split(mini->commands[k], '=')[0]))))
-						{
-							while (env[j])
-							{
-								if (env[j + 1])
-								{
-									free(env[j]);
-									env[j] = ft_strdup(env[j + 1]);
-								}
-								else
-									env[j] = 0;
-								j++;
-							}
-							break ;
-						}
-						j++;
-					}
-					k++;
-				}
-				continue ;
-			}
-			if (!ft_strcmp("exit", mini->commands[0]))
-			{
-				write(1, "exit\n", 5);
-				exit(0);
-			}
-			else if (!ft_strcmp("cd", mini->commands[0]))
-			{
-				if (mini->commands[1] && mini->commands[1][0] == '/')
-				{
-					pwd = mini->commands[1];
-					if (!(opendir(pwd)))
-						ft_error();
-				}
-				else
-				{
-					pwd = ft_strjoin(ft_strjoin(ft_pwd(1), "/"),
-					mini->commands[1]);
-					if (!(opendir(pwd)))
-						ft_error();
-				}
-				env = ft_export(env, ft_strjoin("OLDPWD=", ft_pwd(1)));
-				chdir(pwd);
-				env = ft_export(env, ft_strjoin("PWD=", ft_pwd(1)));
-				continue ;
-			}
-			childpid = fork();
-			if (childpid >= 0)
-			{
-				if (childpid != 0)
-					wait(NULL);
-				else
-					ft_exe(mini->commands[0], mini->commands, env);
-			}
+			env = ft_functs(env, mini);
 		}
 		else
 			ft_redir(mini, env);
@@ -331,25 +253,20 @@ void		ft_loop(char **env)
 	mini->args = 0;
 	mini->in = dup(0);
 	mini->out = dup(1);
-	sig_init(mini);
 	write(1, "... ", 4);
 	i = 0;
 	while (env[i])
 		i++;
 	env2 = malloc(sizeof(char *) * i);
-	i = 0;
-	while (env[i])
-	{
+	i = -1;
+	while (env[++i])
 		env2[i] = ft_strdup(env[i]);
-		i++;
-	}
 	env2[i] = 0;
 	while (get_next_line(0, &mini->main_chain))
 	{
 		mini->args = ft_split(mini->main_chain, ';');
 		ft_read_command(env2, mini);
 		write(1, "... ", 4);
-		signal(SIGINT, &sig_int);
 		free(mini->main_chain);
 	}
 	free(env2);
