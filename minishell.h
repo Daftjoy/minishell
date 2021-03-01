@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/25 14:47:02 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/01 18:01:52 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int				ft_strcmp(const char *s1, const char *s2);
 char 			**ft_argu(char *arg);
 int				ft_exe(char *func, char **argu, char **env);
 void			ft_read_command(char **env, t_args *mini);
-int				ft_subpro(t_args *mini, char **env);
+int				ft_pipe(t_args *mini, char **env);
 char			*ft_strtrim(char const *s1, char const *set);
 void			ft_only_redir(t_args *mini, char **env);
 int				ft_open_file(t_args	*mini, int i);
@@ -65,6 +65,10 @@ char 			**ft_unset(char **env, t_args *mini);
 char 			**ft_functs(char **env, t_args *mini);
 char 			**ft_cd(char **env, t_args *mini);
 void			ft_runcmmd(char **env, t_args *mini);
-
+int				**ft_firstdup(int **fd, char **env, t_args *mini);
+int				**ft_mid_dup(int **fd, char **env, t_args *mini, int *i);
+int				**ft_final_dup(int **fd, char **env, t_args *mini);
+int				ft_wait(int **fd, char **env, t_args *mini, int pipe_numb);
+int				**ft_fd_creater(t_args *mini, int *j);
 # endif
 #endif

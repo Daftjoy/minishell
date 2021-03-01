@@ -3,72 +3,67 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:30:49 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/25 14:48:11 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/01 18:30:11 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void		ft_input(t_args *mini, char **env)
+void	ft_input(t_args *mini, char **env)
 {
-	int fd_file;
-	int i;
-	int pid;
-	int **fd;
+	int		fd_file;
+	int		i;
+	pid_t	pid;
+	int		**fd;
+	int		pipe_numb;
 
 	i = 0;
-	fd = malloc(sizeof(int*));
-	fd[0] = malloc(sizeof(int) * 2);
-	while (mini->type[i] == '<')
+	pipe_numb = 0;
+	while (mini->type[mini->arg] == '<')
 	{
-		fd_file = open(ft_strtrim(mini->args2[i + mini->arg + 1], " "),
+		fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
 		O_RDONLY, S_IRWXU);
-		i++;
+		mini->arg++;
 	}
-	if (mini->type[i] == '|')
-		pipe(fd[0]);
+	if (mini->type[mini->arg] == '|')
+		fd = ft_fd_creater(mini, &pipe_numb);
 	pid = fork();
 	if (pid == 0)
 	{
 		dup2(fd_file, 0);
 		close(fd_file);
-		if (mini->type[i] == '>' || mini->type[i] == ',')
-			dup2(ft_open_file(mini, i), 1);
-		if (mini->type[i] == '|')
+		if (mini->type[mini->arg] == '>' || mini->type[mini->arg] == ',')
 		{
-			close(fd[0][0]);
-			dup2(fd[0][1], 1);
-			close(fd[0][1]);
-		}
-		ft_exe(mini->commands[0], mini->commands, env);
-	}
-	else
-		wait(NULL);
-	if (mini->type[i] == '|')
-	{
-		mini->type = mini->type + i;
-		mini->arg = mini->arg + i + 1;
-		mini->commands = ft_split(mini->args2[mini->arg], ' ');
-		pid = fork();
-		if (pid == 0)
-		{
-			close(fd[0][1]);
-			dup2(fd[0][0], 0);
-			close(fd[0][0]);
+			dup2(ft_open_file(mini, mini->arg), 1);
 			ft_exe(mini->commands[0], mini->commands, env);
 		}
+		else if (mini->type[mini->arg] == '|')
+		{
+			pid = fork();
+			if (pid == 0)
+				fd = ft_firstdup(fd, env, mini);
+			else
+				fd = ft_final_dup(fd, env, mini);
+			close(fd[0][0]);
+			ft_wait(fd, env, mini, pipe_numb);
+		}
 		else
+			ft_exe(mini->commands[0], mini->commands, env);
+	}
+	else
+	{
+		if (!mini->type[mini->arg - 1] || !(mini->type[mini->arg - 1] == '|'))
 			wait(NULL);
-		free(fd[0]);
 	}
 }
 
-int			ft_open_file(t_args *mini, int i)
+int		ft_open_file(t_args *mini, int i)
 {
 	int fd_file;
+
 	i = 0;
 	while (mini->type[mini->arg] == ',' || mini->type[mini->arg] == '>')
 	{
@@ -83,9 +78,10 @@ int			ft_open_file(t_args *mini, int i)
 	return (fd_file);
 }
 
-void		ft_move_pos(t_args *mini ,int  i)
+void	ft_move_pos(t_args *mini, int i)
 {
 	int j;
+
 	j = i;
 	while (mini->type[i] == ',' || mini->type[i] == '>')
 	{
@@ -94,8 +90,7 @@ void		ft_move_pos(t_args *mini ,int  i)
 	mini->type = mini->type + i;
 }
 
-
-void		ft_only_redir(t_args *mini, char **env)
+void	ft_only_redir(t_args *mini, char **env)
 {
 	int pid;
 	int fd_file;
@@ -137,90 +132,24 @@ void		ft_redir(t_args *mini, char **env)
 		return ;
 	}
 	else
-		ft_subpro(mini, env);
+		ft_pipe(mini, env);
 }
 
-int			ft_subpro(t_args *mini, char **env)
+int		ft_pipe(t_args *mini, char **env)
 {
-	int	**fd;
-	int	pid;
-	int	i;
-	int fd_file;
-	int pipe_numb;
+	int		**fd;
+	pid_t	pid;
+	int		pipe_numb;
 
-	i = 0;
-	pipe_numb = 0;
-	while (mini->type[pipe_numb + mini->arg] == '|')
-		pipe_numb++;
-	fd = malloc(pipe_numb * sizeof(int *));
-	while (i < pipe_numb)
-	{
-		fd[i] = malloc(2 * sizeof(int));
-		i++;
-	}
-	pipe(fd[0]);
+	fd = ft_fd_creater(mini, &pipe_numb);
 	mini->commands = ft_split(mini->args2[mini->arg], ' ');
 	pid = fork();
 	if (pid == 0)
-	{
-		close(fd[0][0]);
-		dup2(fd[0][1], 1);
-		close(fd[0][1]);
-		ft_exe(mini->commands[0], mini->commands, env);
-	}
+		fd = ft_firstdup(fd, env, mini);
 	else
-	{
-		i = 1;
-		mini->arg++;
-		while (mini->type[mini->arg] == '|')
-		{
-			mini->commands = ft_split(mini->args2[mini->arg], ' ');
-			close(fd[i - 1][1]);
-			pipe(fd[i]);
-			pid = fork();
-			if (pid == 0)
-			{
-				close(fd[i][0]);
-				dup2(fd[i - 1][0], 0);
-				close(fd[i - 1][0]);
-				dup2(fd[i][1], 1);
-				close(fd[i][1]);
-				ft_exe(mini->commands[0], mini->commands, env);
-			}
-			i++;
-			mini->arg++;
-		}
-		mini->commands = ft_split(mini->args2[mini->arg], ' ');
-		close(fd[i - 1][1]);
-		if (i > 1)
-			close(fd[i - 2][0]);
-		if (mini->type[mini->arg] == '>')
-			fd_file = ft_open_file(mini, i);
-		pid = fork();
-		if (pid == 0)
-		{
-			dup2(fd[i - 1][0], 0);
-			close(fd[i - 1][0]);
-			dup2(fd_file, 1);
-			ft_exe(mini->commands[0], mini->commands, env);
-		}
-	}
+		fd = ft_final_dup(fd, env, mini);
 	close(fd[0][0]);
-	i = 0;
-	wait(NULL);
-	while (i < pipe_numb)
-	{
-		wait(NULL);
-		free(fd[i]);
-		i++;
-	}
-	free(fd);
-	if (mini->type[mini->arg] == '|')
-	{
-		mini->arg++;
-		ft_redir(mini, env);
-	}
-	return (i);
+	return (ft_wait(fd, env, mini, pipe_numb));
 }
 
 void		ft_read_command(char **env, t_args *mini)
@@ -251,8 +180,6 @@ void		ft_loop(char **env)
 	mini = malloc(sizeof(t_args));
 	mini->main_chain = 0;
 	mini->args = 0;
-	mini->in = dup(0);
-	mini->out = dup(1);
 	write(1, "... ", 4);
 	i = 0;
 	while (env[i])
