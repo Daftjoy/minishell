@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/01 18:01:52 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/02 20:01:19 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,8 @@ int				**ft_mid_dup(int **fd, char **env, t_args *mini, int *i);
 int				**ft_final_dup(int **fd, char **env, t_args *mini);
 int				ft_wait(int **fd, char **env, t_args *mini, int pipe_numb);
 int				**ft_fd_creater(t_args *mini, int *j);
+void			ft_d(int fd_file);
+void			ft_input_pipe(char **env, t_args *mini, int fd_file);
+void			ft_input_2(char **env, t_args *mini, int fd_file);
 # endif
 #endif

@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 16:18:26 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/01 17:28:44 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/02 19:58:03 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,12 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 	{
 		dup2(fd[i - 1][0], 0);
 		close(fd[i - 1][0]);
-		dup2(fd_file, 1);
+		if (mini->type[mini->arg] == '>')
+			dup2(fd_file, 1);
 		ft_exe(mini->commands[0], mini->commands, env);
 	}
+	else
+		wait(NULL);
 	return (fd);
 }
 
@@ -102,7 +105,6 @@ int		ft_wait(int **fd, char **env, t_args *mini, int pipe_numb)
 	int i;
 
 	i = 0;
-	wait(NULL);
 	while (i < pipe_numb)
 	{
 		wait(NULL);
