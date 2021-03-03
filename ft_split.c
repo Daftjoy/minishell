@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/02/25 12:49:19 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/03 16:25:23 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,8 @@ static int			ft_quotes(int doble, int single, int n, const char *s)
 	i = 0;
 	if (s[n + i] == '\"' || s[n + i] == '\'')
 	{
-		if (s[n + i] == '\"')
-		{
-			doble = 1;
-			single = 0;
-		}
-		else
-		{
-			doble = 0;
-			single = 1;
-		}
+		doble = (s[n + i] == '\"') ? 1 : 0;
+		single = !(s[n + i] == '\"') ? 1 : 0;
 		i++;
 		while (s[n + i] && (doble || single))
 		{

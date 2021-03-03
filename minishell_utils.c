@@ -6,13 +6,13 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/01 16:59:50 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/03 16:48:19 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_echo(char **argu)
+void			ft_echo(char **argu)
 {
 	int i;
 	int	opt;
@@ -36,7 +36,7 @@ void	ft_echo(char **argu)
 		write(1, "\n", 1);
 }
 
-char	*ft_pwd(int opt)
+char			*ft_pwd(int opt)
 {
 	char *pwd;
 
@@ -51,55 +51,29 @@ char	*ft_pwd(int opt)
 	return (pwd);
 }
 
-int		ft_exe(char *func, char **argu, char **env)
+int				ft_exe(char *func, char **argu, char **env)
 {
 	int		i;
 	char	**paths;
-	char	*p;
-	int		j;
 	int		bool;
 
-	i = 0;
-	j = 1;
 	paths = 0;
 	bool = 0;
 	argu = ft_parser(argu, env);
 	if (argu[0][0] == '/')
 		execve(argu[0], argu, env);
-	if (argu[1] && (argu[1][0] == '-'))
-		j = 2;
-	i = 0;
-	while (env[i])
-	{
+	i = -1;
+	while (env[++i])
 		if (ft_strchr(env[i], '='))
-		{
 			if (!ft_strcmp("PATH", ft_substr(env[i], 0, 4)))
 				paths = ft_split(env[i], ':');
-		}
-		i++;
-	}
-	if (!ft_strcmp("echo", argu[0]))
-	{
-		ft_echo(argu);
-		exit(0);
-	}
-	else if (!ft_strcmp("pwd", argu[0]))
-	{
-		ft_pwd(0);
-		exit(0);
-	}
-	i = 0;
-	while (paths[i])
-	{
-		p = malloc(100);
-		p = ft_strjoin(paths[i], "/");
-		p = ft_strjoin(p, func);
-		if ((execve(p, argu, env)) > 0)
+	if (!(ft_strcmp("echo", argu[0])) || !(ft_strcmp("pwd", argu[0])))
+		ft_echo_pwd(argu);
+	i = -1;
+	while (paths[++i])
+		if ((execve(ft_strjoin(ft_strjoin(paths[i], "/"), func),
+		argu, env)) > 0)
 			bool = 1;
-		i++;
-		p = 0;
-		free(p);
-	}
 	if (bool == 0)
 		ft_error();
 	return (1);

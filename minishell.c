@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:23:38 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/02 19:59:34 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/03 17:35:06 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int		ft_pipe(t_args *mini, char **env)
 		fd = ft_firstdup(fd, env, mini);
 	else
 		fd = ft_final_dup(fd, env, mini);
-	close(fd[0][0]);
 	return (ft_wait(fd, env, mini, pipe_numb));
 }
 
@@ -63,9 +62,11 @@ void	ft_read_command(char **env, t_args *mini)
 		{
 			mini->commands = ft_split(mini->args2[0], ' ');
 			env = ft_functs(env, mini);
+			free(mini->commands);
 		}
 		else
 			ft_redir(mini, env);
+		free(mini->args2);
 	}
 }
 
@@ -93,7 +94,9 @@ void	ft_loop(char **env)
 		ft_read_command(env2, mini);
 		write(1, "... ", 4);
 		free(mini->main_chain);
+		free(mini->args);
 	}
+	free(mini);
 	free(env2);
 }
 

@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 16:18:26 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/02 19:58:03 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/03 15:49:36 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 	pid_t	pid;
 
 	i = 0;
+	fd_file = 0;
 	fd = ft_mid_dup(fd, env, mini, &i);
 	mini->commands = ft_split(mini->args2[mini->arg], ' ');
 	close(fd[i - 1][1]);
@@ -91,7 +92,7 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 	{
 		dup2(fd[i - 1][0], 0);
 		close(fd[i - 1][0]);
-		if (mini->type[mini->arg] == '>')
+		if (fd_file)
 			dup2(fd_file, 1);
 		ft_exe(mini->commands[0], mini->commands, env);
 	}

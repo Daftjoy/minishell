@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 16:11:34 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/01 16:17:10 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/03 17:24:49 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ char	*ft_find_var(char **env, char *var)
 		i++;
 	}
 	return (str);
-}
-
-void	ft_error(void)
-{
-	write(1, "Error: ", 7);
-	write(1, strerror(errno), ft_strlen(strerror(errno)));
-	write(1, "\n", 1);
 }
 
 char	**ft_export(char **env, char *var)
@@ -80,48 +73,49 @@ char	**ft_parser(char **argu, char **env)
 	return (argu);
 }
 
+char	*ft_dquotes2(char *ret, char **env, char *argu, int *l)
+{
+	int		i;
+	int		j;
+
+	j = 0;
+	i = *l;
+	while (argu[i + j] && argu[i + j] != ' ' && argu[i + j] != '\"'
+	&& argu[i + j] != '\'')
+		j++;
+	if (ft_find_var(env, ft_substr(&argu[i], 1, j - 1)))
+		ret = ret ? ft_strjoin(ret, ft_find_var(env,
+		ft_substr(&argu[i], 1, j - 1))) :
+		ft_substr(&argu[i], 1, j - 1);
+	*l += j - 1;
+	return (ret);
+}
+
 char	*ft_dquotes(char **env, char *argu, int opt)
 {
 	char	*str;
 	char	*ret;
 	int		i;
-	int		j;
 	int		k;
 
 	ret = 0;
 	str = malloc(ft_count(argu, 0) + 1);
-	i = 0;
+	i = -1;
 	k = 0;
-	while (argu[i])
-	{
+	while (argu[++i])
 		if (argu[i] == '$')
 		{
-			j = 0;
-			while (argu[i + j] && argu[i + j] != ' ' && argu[i + j] != '\"'
-			&& argu[i + j] != '\'')
-				j++;
 			str[k] = '\0';
 			ret = ret ? ft_strjoin(ret, str) : ft_strdup(str);
-			if (ft_find_var(env, ft_substr(&argu[i], 1, j - 1)))
-				ret = ret ? ft_strjoin(ret, ft_find_var(env,
-				ft_substr(&argu[i], 1, j - 1))) :
-				ft_substr(&argu[i], 1, j - 1);
+			ret = ft_dquotes2(ret, env, argu, &i);
 			free(str);
-			str = 0;
-			i += j - 1;
 			str = malloc(ft_count(&argu[i], 0) + 1);
 			k = 0;
 		}
 		else if (argu[i] != '\"' || opt)
-		{
-			str[k] = argu[i];
-			k++;
-		}
-		i++;
-	}
+			str[k++] = argu[i];
 	str[k] = '\0';
 	ret = ret ? ft_strjoin(ret, str) : ft_strdup(str);
 	free(str);
-	str = 0;
 	return (ret);
 }
