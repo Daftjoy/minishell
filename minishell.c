@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:23:38 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/03 17:35:06 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/04 15:50:41 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,22 @@ void	ft_read_command(char **env, t_args *mini)
 		{
 			mini->commands = ft_split(mini->args2[0], ' ');
 			env = ft_functs(env, mini);
-			free(mini->commands);
+			ft_free_arr(mini->commands);
 		}
 		else
 			ft_redir(mini, env);
-		free(mini->args2);
+		ft_free_arr(mini->args2);
 	}
+}
+
+void ft_free_arr(char **arr)
+{
+	int i;
+
+	i = -1;
+	while(arr[++i])
+		free(arr[i]);
+	free(arr);
 }
 
 void	ft_loop(char **env)
@@ -94,10 +104,10 @@ void	ft_loop(char **env)
 		ft_read_command(env2, mini);
 		write(1, "... ", 4);
 		free(mini->main_chain);
-		free(mini->args);
+		ft_free_arr(mini->args);
 	}
 	free(mini);
-	free(env2);
+	ft_free_arr(env2);
 }
 
 int		main(int argc, char **argv, char **env)

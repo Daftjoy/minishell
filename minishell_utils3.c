@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 16:11:34 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/03 17:24:49 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/04 16:36:35 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,17 @@ char	*ft_find_var(char **env, char *var)
 {
 	int		i;
 	char	*str;
+	char	**split;
 
 	i = 0;
 	str = 0;
 	while (env[i])
 	{
-		if (ft_strchr(env[i], '=') && !ft_strcmp(var, ft_split(env[i], '=')[0]))
-			str = ft_split(env[i], '=')[1];
+		split = ft_split(env[i], '=');
+		if (ft_strchr(env[i], '=') && !ft_strcmp(var, split[0]))
+			str = split[1];
 		i++;
+		ft_free_arr(split);
 	}
 	return (str);
 }
@@ -31,18 +34,23 @@ char	*ft_find_var(char **env, char *var)
 char	**ft_export(char **env, char *var)
 {
 	int j;
+	char **split;
+	char **split_var;
 
 	j = 0;
 	while (env[j])
 	{
-		if (ft_strchr(env[j], '=') && ft_split(env[j], '=')
-		&& (!(ft_strcmp(ft_split(env[j], '=')[0],
-		ft_split(var, '=')[0]))))
+		split = ft_split(env[j], '=');
+		split_var = ft_split(var, '=');
+		if (ft_strchr(env[j], '=') && split
+		&& (!(ft_strcmp(split[0], split_var[0]))))
 		{
 			free(env[j]);
 			env[j] = ft_strdup(var);
 			break ;
 		}
+		ft_free_arr(split);
+		ft_free_arr(split_var);
 		j++;
 	}
 	if (!env[j])

@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/03 17:14:00 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/04 15:49:40 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,6 @@ char			*ft_find(char const *s);
 void			ft_echo_pwd(char **argu);
 void			ft_echo(char **argu);
 char			*ft_dquotes2(char *str, char **env, char *argu, int *l);
+void			ft_free_arr(char **arr);
 # endif
 #endif

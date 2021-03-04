@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/03 16:48:19 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/04 16:27:50 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int				ft_exe(char *func, char **argu, char **env)
 			bool = 1;
 	if (bool == 0)
 		ft_error();
+	ft_free_arr(paths);
 	return (1);
 }
 

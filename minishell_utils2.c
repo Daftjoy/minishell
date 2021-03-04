@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/01 16:18:21 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/04 16:39:29 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,21 @@ int		ft_count(char *str, int opt)
 
 char	**ft_unset(char **env, t_args *mini)
 {
-	int k;
-	int j;
+	int		k;
+	int		j;
+	char	**split;
+	char	**split_commands;
 
 	k = 0;
 	while (mini->commands[++k])
 	{
 		j = -1;
 		while (env[++j])
-			if (ft_strchr(env[j], '=') && ft_split(env[j], '=') &&
-			(!(ft_strcmp(ft_split(env[j], '=')[0],
-			ft_split(mini->commands[k], '=')[0]))))
+		{
+			split = ft_split(env[j], '=');
+			split_commands = ft_split(mini->commands[k], '=');
+			if (ft_strchr(env[j], '=') && split &&
+			(!(ft_strcmp(split[0], split_commands[0]))))
 			{
 				while (env[j])
 				{
@@ -61,8 +65,13 @@ char	**ft_unset(char **env, t_args *mini)
 						env[j] = 0;
 					j++;
 				}
+				ft_free_arr(split);
+				ft_free_arr(split_commands);
 				break ;
 			}
+			ft_free_arr(split);
+			ft_free_arr(split_commands);
+		}
 	}
 	return (env);
 }
@@ -70,6 +79,7 @@ char	**ft_unset(char **env, t_args *mini)
 char	**ft_cd(char **env, t_args *mini)
 {
 	char *pwd;
+	char *old_pwd;
 
 	if (mini->commands[1] && mini->commands[1][0] == '/')
 	{
@@ -79,14 +89,21 @@ char	**ft_cd(char **env, t_args *mini)
 	}
 	else
 	{
-		pwd = ft_strjoin(ft_strjoin(ft_pwd(1), "/"),
-		mini->commands[1]);
+		pwd = ft_strjoin(ft_pwd(1), "/");
+		free(pwd);
+		pwd = ft_strjoin(pwd, mini->commands[1]);
 		if (!(opendir(pwd)))
 			ft_error();
 	}
-	env = ft_export(env, ft_strjoin("OLDPWD=", ft_pwd(1)));
+	old_pwd = ft_strjoin("OLDPWD=", ft_pwd(1));
+	ft_export(env, old_pwd);
+	free(old_pwd);
 	chdir(pwd);
-	return (ft_export(env, ft_strjoin("PWD=", ft_pwd(1))));
+	free(pwd);
+	pwd = ft_strjoin("PWD=", ft_pwd(1));
+	env = ft_export(env, pwd);
+	free (pwd);
+	return (env);
 }
 
 void	ft_runcmmd(char **env, t_args *mini)
