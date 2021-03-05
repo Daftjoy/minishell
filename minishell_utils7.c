@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:56:53 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/04 12:28:15 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/05 18:53:30 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	ft_only_redir(t_args *mini, char **env)
 
 void	ft_echo_pwd(char **argu)
 {
-	if (!ft_strcmp("echo", argu[0]))
+	if (!(ft_strcmp("echo", argu[0])))
 		ft_echo(argu);
 	else if (!ft_strcmp("pwd", argu[0]))
 		ft_pwd(0);

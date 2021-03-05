@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/04 17:49:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/04 16:27:50 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/05 18:52:56 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void			ft_echo(char **argu)
 	int	opt;
 
 	opt = 0;
-	if (!ft_strcmp(argu[1], "-n"))
+	if (argu[1] && !ft_strcmp(argu[1], "-n"))
 		opt = 1;
 	i = opt + 1;
 	if (argu[i])
@@ -69,14 +69,18 @@ int				ft_exe(char *func, char **argu, char **env)
 				paths = ft_split(env[i], ':');
 	if (!(ft_strcmp("echo", argu[0])) || !(ft_strcmp("pwd", argu[0])))
 		ft_echo_pwd(argu);
+
 	i = -1;
 	while (paths[++i])
 		if ((execve(ft_strjoin(ft_strjoin(paths[i], "/"), func),
 		argu, env)) > 0)
 			bool = 1;
-	if (bool == 0)
-		ft_error();
 	ft_free_arr(paths);
+	if (bool == 0)
+	{
+		ft_error();
+		exit(0);
+	}
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/04 15:49:51 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/05 20:59:32 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,12 @@ static int			ft_quotes(int doble, int single, int n, const char *s)
 			i++;
 		}
 	}
+	if (doble || single)
+		return (-1);
 	return (i);
 }
 
-static unsigned int	ft_wcount(char const *s, char c)
+int	ft_wcount(char const *s, char c)
 {
 	unsigned int	n;
 	unsigned int	w;
@@ -53,10 +55,16 @@ static unsigned int	ft_wcount(char const *s, char c)
 		w++;
 		while (s[n] != c && s[n])
 		{
-			if (ft_quotes(0, 0, n, s))
+			if (ft_quotes(0, 0, n, s) > 0)
 				n += ft_quotes(0, 0, n, s);
-			else
+			else if (!ft_quotes(0, 0, n, s))
 				n++;
+			else
+			{
+				printf("ahshasf\n");
+				return (-1);
+			}
+
 		}
 	}
 	return (w);
@@ -91,7 +99,7 @@ static unsigned int	ft_loop(char *s, char c, char **str)
 
 	i = 0;
 	n = 0;
-	while (i < (ft_wcount(s, c)))
+	while (i < ((unsigned int)ft_wcount(s, c)))
 	{
 		while (s[n] == c)
 			n++;
@@ -117,6 +125,12 @@ char				**ft_split(char *s, char c)
 
 	if (!s)
 		return (0);
+	if (ft_wcount(s, c) == -1)
+	{
+		write(1, "No double quotes", 16);
+		exit(0);
+		//return (0);
+	}
 	if (!(str = (char **)malloc((ft_wcount(s, c) + 1) * sizeof(char *))))
 		return (0);
 	str[ft_wcount(s, c)] = NULL;

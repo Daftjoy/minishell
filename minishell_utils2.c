@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/04 16:39:29 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/05 19:01:11 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,28 +80,30 @@ char	**ft_cd(char **env, t_args *mini)
 {
 	char *pwd;
 	char *old_pwd;
+	DIR *error;
 
 	if (mini->commands[1] && mini->commands[1][0] == '/')
-	{
-		pwd = mini->commands[1];
-		if (!(opendir(pwd)))
-			ft_error();
-	}
+		pwd = ft_strdup(mini->commands[1]);
 	else
 	{
 		pwd = ft_strjoin(ft_pwd(1), "/");
 		free(pwd);
 		pwd = ft_strjoin(pwd, mini->commands[1]);
-		if (!(opendir(pwd)))
-			ft_error();
 	}
+	if (!(error = opendir(pwd)))
+	{
+		ft_error();
+		free(pwd);
+		return (env);
+	}
+	closedir(error);
 	old_pwd = ft_strjoin("OLDPWD=", ft_pwd(1));
 	ft_export(env, old_pwd);
 	free(old_pwd);
 	chdir(pwd);
 	free(pwd);
 	pwd = ft_strjoin("PWD=", ft_pwd(1));
-	env = ft_export(env, pwd);
+	ft_export(env, pwd);
 	free (pwd);
 	return (env);
 }
@@ -139,6 +141,8 @@ char	**ft_functs(char **env, t_args *mini)
 	else if (!ft_strcmp("exit", mini->commands[0]))
 	{
 		write(1, "exit\n", 5);
+		if(mini->commands[1])
+			write(1, "No arguments accepted\n", 22);
 		exit(0);
 	}
 	else if (!ft_strcmp("cd", mini->commands[0]))

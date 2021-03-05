@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 16:11:34 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/04 16:36:35 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/05 17:38:18 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ char	**ft_export(char **env, char *var)
 		{
 			free(env[j]);
 			env[j] = ft_strdup(var);
+			ft_free_arr(split);
+			ft_free_arr(split_var);
 			break ;
 		}
 		ft_free_arr(split);
@@ -55,6 +57,7 @@ char	**ft_export(char **env, char *var)
 	}
 	if (!env[j])
 	{
+		free(env[j]);
 		env[j] = ft_strdup(var);
 		env[++j] = 0;
 	}

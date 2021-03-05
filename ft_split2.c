@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/03 16:14:57 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/05 19:09:28 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,6 @@ static unsigned int	ft_wcount(char const *s)
 			if (s[i] == '\"')
 				n++;
 			i++;
-		}
-		if (n % 2 != 0)
-		{
-			write(1, "No double quotes", 17);
-			exit(0);
 		}
 	}
 	w = ft_wcount_2(s, w, n);
