@@ -101,10 +101,13 @@ void	ft_loop(char **env)
 	while (get_next_line(0, &mini->main_chain))
 	{
 		mini->args = ft_split(mini->main_chain, ';');
-		ft_read_command(env2, mini);
+		if (mini->args)
+		{
+			ft_read_command(env2, mini);
+			ft_free_arr(mini->args);
+		}
 		write(1, "... ", 4);
 		free(mini->main_chain);
-		ft_free_arr(mini->args);
 	}
 	free(mini);
 	ft_free_arr(env2);

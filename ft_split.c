@@ -60,11 +60,7 @@ int	ft_wcount(char const *s, char c)
 			else if (!ft_quotes(0, 0, n, s))
 				n++;
 			else
-			{
-				printf("ahshasf\n");
 				return (-1);
-			}
-
 		}
 	}
 	return (w);
@@ -127,9 +123,8 @@ char				**ft_split(char *s, char c)
 		return (0);
 	if (ft_wcount(s, c) == -1)
 	{
-		write(1, "No double quotes", 16);
-		exit(0);
-		//return (0);
+		write(1, "Missing closing quotes\n", 23);
+		return (0);
 	}
 	if (!(str = (char **)malloc((ft_wcount(s, c) + 1) * sizeof(char *))))
 		return (0);
