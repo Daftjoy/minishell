@@ -17,14 +17,18 @@ char	*ft_find_var(char **env, char *var)
 	int		i;
 	char	*str;
 	char	**split;
+	char	a;
 
 	i = 0;
 	str = 0;
+	a = (char)errno + 48;
+	if (!ft_strcmp(var, "?"))
+		return (ft_strdup(&a));
 	while (env[i])
 	{
 		split = ft_split(env[i], '=');
 		if (ft_strchr(env[i], '=') && !ft_strcmp(var, split[0]))
-			str = split[1];
+			str = ft_strdup(split[1]);
 		i++;
 		ft_free_arr(split);
 	}

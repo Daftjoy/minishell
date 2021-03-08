@@ -69,7 +69,6 @@ int				ft_exe(char *func, char **argu, char **env)
 				paths = ft_split(env[i], ':');
 	if (!(ft_strcmp("echo", argu[0])) || !(ft_strcmp("pwd", argu[0])))
 		ft_echo_pwd(argu);
-
 	i = -1;
 	while (paths[++i])
 		if ((execve(ft_strjoin(ft_strjoin(paths[i], "/"), func),

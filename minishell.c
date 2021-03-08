@@ -100,6 +100,7 @@ void	ft_loop(char **env)
 	env2[i] = 0;
 	while (get_next_line(0, &mini->main_chain))
 	{
+		mini->exit_status = errno;
 		mini->args = ft_split(mini->main_chain, ';');
 		if (mini->args)
 		{
