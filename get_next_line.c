@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/28 17:01:25 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/04 15:52:16 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/08 20:15:51 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "minishell.h"
 
 int		get_next_line(int fd, char **line)
 {

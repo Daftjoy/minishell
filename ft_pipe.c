@@ -1,37 +1,51 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_utils4.c                                 :+:      :+:    :+:   */
+/*   ft_pipe.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/01 16:18:26 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/04 15:53:06 by antmarti         ###   ########.fr       */
+/*   Created: 2021/03/08 19:11:35 by agianico          #+#    #+#             */
+/*   Updated: 2021/03/08 19:56:20 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_squotes(char *argu)
+int		ft_pipe(t_args *mini, char **env)
 {
-	char	*str;
-	int		i;
-	int		k;
+	int		**fd;
+	pid_t	pid;
+	int		pipe_numb;
 
+	fd = ft_fd_creater(mini, &pipe_numb);
+	pid = fork();
+	if (pid == 0)
+		fd = ft_firstdup(fd, env, mini);
+	else
+		fd = ft_final_dup(fd, env, mini);
+	return (ft_wait(fd, env, mini, pipe_numb));
+}
+
+int		**ft_fd_creater(t_args *mini, int *j)
+{
+	int pipe_numb;
+	int **fd;
+	int i;
+
+	pipe_numb = 0;
 	i = 0;
-	k = 0;
-	str = malloc(ft_count(argu, 1));
-	while (argu[i])
+	while (mini->type[pipe_numb + mini->arg] == '|')
+		pipe_numb++;
+	fd = malloc(pipe_numb * sizeof(int *));
+	while (i < pipe_numb)
 	{
-		if (argu[i] != '\'')
-		{
-			str[k] = argu[i];
-			k++;
-		}
+		fd[i] = malloc(2 * sizeof(int));
 		i++;
 	}
-	str[k] = '\0';
-	return (str);
+	pipe(fd[0]);
+	*j = pipe_numb;
+	return (fd);
 }
 
 int		**ft_firstdup(int **fd, char **env, t_args *mini)
@@ -39,7 +53,7 @@ int		**ft_firstdup(int **fd, char **env, t_args *mini)
 	close(fd[0][0]);
 	dup2(fd[0][1], 1);
 	close(fd[0][1]);
-	ft_exe(mini->commands[0], mini->commands, env);
+	ft_exe(mini->commands[0], mini->commands, env, mini);
 	return (fd);
 }
 
@@ -63,7 +77,7 @@ int		**ft_mid_dup(int **fd, char **env, t_args *mini, int *j)
 			close(fd[i - 1][0]);
 			dup2(fd[i][1], 1);
 			close(fd[i][1]);
-			ft_exe(mini->commands[0], mini->commands, env);
+			ft_exe(mini->commands[0], mini->commands, env, mini);
 		}
 		i++;
 		mini->arg++;
@@ -94,29 +108,9 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 		close(fd[i - 1][0]);
 		if (fd_file)
 			dup2(fd_file, 1);
-		ft_exe(mini->commands[0], mini->commands, env);
+		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
 		wait(NULL);
 	return (fd);
-}
-
-int		ft_wait(int **fd, char **env, t_args *mini, int pipe_numb)
-{
-	int i;
-
-	i = 0;
-	while (i < pipe_numb)
-	{
-		wait(NULL);
-		free(fd[i]);
-		i++;
-	}
-	free(fd);
-	if (mini->type[mini->arg] && mini->type[mini->arg] == '|')
-	{
-		mini->arg++;
-		ft_redir(mini, env);
-	}
-	return (i);
 }

@@ -1,21 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_utils6.c                                 :+:      :+:    :+:   */
+/*   ft_input.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/02 19:55:12 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/02 19:55:39 by antmarti         ###   ########.fr       */
+/*   Created: 2021/03/08 19:26:36 by agianico          #+#    #+#             */
+/*   Updated: 2021/03/08 19:56:11 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_d(int fd_file)
+void	ft_input(t_args *mini, char **env)
 {
-	dup2(fd_file, 0);
-	close(fd_file);
+	int		fd_file;
+
+	while (mini->type[mini->arg] == '<')
+	{
+		fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
+		O_RDONLY, S_IRWXU);
+		mini->arg++;
+	}
+	if (mini->type[mini->arg] == '|')
+		ft_input_pipe(env, mini, fd_file);
+	else
+		ft_input_2(env, mini, fd_file);
 }
 
 void	ft_input_pipe(char **env, t_args *mini, int fd_file)
@@ -47,42 +57,14 @@ void	ft_input_2(char **env, t_args *mini, int fd_file)
 		ft_d(fd_file);
 		if (mini->type[mini->arg] == '>' || mini->type[mini->arg] == ',')
 			dup2(ft_open_file(mini, mini->arg), 1);
-		ft_exe(mini->commands[0], mini->commands, env);
+		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
 		wait(NULL);
 }
 
-void	ft_input(t_args *mini, char **env)
+void	ft_d(int fd_file)
 {
-	int		fd_file;
-
-	while (mini->type[mini->arg] == '<')
-	{
-		fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
-		O_RDONLY, S_IRWXU);
-		mini->arg++;
-	}
-	if (mini->type[mini->arg] == '|')
-		ft_input_pipe(env, mini, fd_file);
-	else
-		ft_input_2(env, mini, fd_file);
-}
-
-int		ft_open_file(t_args *mini, int i)
-{
-	int fd_file;
-
-	i = 0;
-	while (mini->type[mini->arg] == ',' || mini->type[mini->arg] == '>')
-	{
-		if (mini->type[mini->arg] == ',')
-			fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
-			O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
-		else
-			fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
-			O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
-		mini->arg++;
-	}
-	return (fd_file);
+	dup2(fd_file, 0);
+	close(fd_file);
 }

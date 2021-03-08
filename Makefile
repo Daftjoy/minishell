@@ -1,5 +1,5 @@
-SRCS	=	ft_split.c ft_split2.c ft_split2_expansion.c ft_strcmp.c get_next_line.c get_next_line_utils.c minishell.c minishell_utils.c minishell_utils2.c \
-minishell_utils3.c minishell_utils4.c minishell_utils5.c minishell_utils6.c minishell_utils7.c
+SRCS	=	ft_split.c ft_split2.c ft_split2_expansion.c ft_strcmp.c ft_strtrim.c ft_echo_pwd.c ft_export.c ft_quotes.c ft_find_var.c ft_functs.c ft_unset.c \
+ft_cd.c ft_exe.c ft_input.c ft_redirections.c ft_pipe.c ft_wait.c ft_error.c ft_free.c get_next_line.c get_next_line_utils.c minishell.c
 
 OBJS =	$(SRCS:.c=.o)
 

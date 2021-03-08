@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/05 20:59:32 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/08 20:23:54 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int			ft_quotes(int doble, int single, int n, const char *s)
+int					ft_quotes(int doble, int single, int n, const char *s)
 {
 	int i;
 
@@ -36,7 +36,7 @@ static int			ft_quotes(int doble, int single, int n, const char *s)
 	return (i);
 }
 
-int	ft_wcount(char const *s, char c)
+int					ft_wcount(char const *s, char c)
 {
 	unsigned int	n;
 	unsigned int	w;

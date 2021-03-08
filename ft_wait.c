@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_utils5.c                                 :+:      :+:    :+:   */
+/*   ft_wait.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/01 17:58:14 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/01 18:02:39 by antmarti         ###   ########.fr       */
+/*   Created: 2021/03/08 19:13:53 by agianico          #+#    #+#             */
+/*   Updated: 2021/03/08 19:14:05 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	**ft_fd_creater(t_args *mini, int *j)
+int		ft_wait(int **fd, char **env, t_args *mini, int pipe_numb)
 {
-	int pipe_numb;
-	int **fd;
 	int i;
 
-	pipe_numb = 0;
 	i = 0;
-	while (mini->type[pipe_numb + mini->arg] == '|')
-		pipe_numb++;
-	fd = malloc(pipe_numb * sizeof(int *));
 	while (i < pipe_numb)
 	{
-		fd[i] = malloc(2 * sizeof(int));
+		wait(NULL);
+		free(fd[i]);
 		i++;
 	}
-	pipe(fd[0]);
-	*j = pipe_numb;
-	return (fd);
+	free(fd);
+	if (mini->type[mini->arg] && mini->type[mini->arg] == '|')
+	{
+		mini->arg++;
+		ft_redir(mini, env);
+	}
+	return (i);
 }

@@ -3,51 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:23:38 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/04 15:50:41 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/08 19:25:28 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_redir(t_args *mini, char **env)
-{
-	int pid;
-
-	mini->commands = ft_split(mini->args2[mini->arg], ' ');
-	if (mini->type[mini->arg] == ',' || mini->type[mini->arg] == '>')
-		ft_only_redir(mini, env);
-	else if (mini->type[mini->arg] == '<')
-		ft_input(mini, env);
-	else if (!(mini->type[mini->arg]))
-	{
-		pid = fork();
-		if (pid == 0)
-			ft_exe(mini->commands[0], mini->commands, env);
-		else
-			wait(NULL);
-		return ;
-	}
-	else
-		ft_pipe(mini, env);
-}
-
-int		ft_pipe(t_args *mini, char **env)
-{
-	int		**fd;
-	pid_t	pid;
-	int		pipe_numb;
-
-	fd = ft_fd_creater(mini, &pipe_numb);
-	pid = fork();
-	if (pid == 0)
-		fd = ft_firstdup(fd, env, mini);
-	else
-		fd = ft_final_dup(fd, env, mini);
-	return (ft_wait(fd, env, mini, pipe_numb));
-}
 
 void	ft_read_command(char **env, t_args *mini)
 {
@@ -70,16 +33,6 @@ void	ft_read_command(char **env, t_args *mini)
 	}
 }
 
-void ft_free_arr(char **arr)
-{
-	int i;
-
-	i = -1;
-	while(arr[++i])
-		free(arr[i]);
-	free(arr);
-}
-
 void	ft_loop(char **env)
 {
 	t_args	*mini;
@@ -100,7 +53,9 @@ void	ft_loop(char **env)
 	env2[i] = 0;
 	while (get_next_line(0, &mini->main_chain))
 	{
-		mini->exit_status = errno;
+		mini->exit_status = malloc(2);
+		mini->exit_status[0] = (char)errno + 48;
+		mini->exit_status[1] = '\0';
 		mini->args = ft_split(mini->main_chain, ';');
 		if (mini->args)
 		{
@@ -108,6 +63,7 @@ void	ft_loop(char **env)
 			ft_free_arr(mini->args);
 		}
 		write(1, "... ", 4);
+		free(mini->exit_status);
 		free(mini->main_chain);
 	}
 	free(mini);
