@@ -111,6 +111,6 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
-		wait(NULL);
+		waitpid(pid, &mini->exit_status, 0);
 	return (fd);
 }

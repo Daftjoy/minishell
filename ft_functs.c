@@ -20,7 +20,7 @@ void	ft_runcmmd(char **env, t_args *mini)
 	if (childpid >= 0)
 	{
 		if (childpid != 0)
-			wait(NULL);
+			waitpid(childpid, &mini->exit_status, 0);
 		else
 			ft_exe(mini->commands[0], mini->commands, env, mini);
 	}

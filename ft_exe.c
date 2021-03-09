@@ -21,8 +21,14 @@ int				ft_exe(char *func, char **argu, char **env, t_args *mini)
 	paths = 0;
 	bool = 0;
 	argu = ft_parser(argu, env, mini);
+	mini->exit_status = 0;
 	if (argu[0][0] == '/')
-		execve(argu[0], argu, env);
+		if ((execve(argu[0], argu, env)) < 0)
+		{
+			ft_error(mini);
+			printf("%d\n", errno);
+			exit(errno);
+		}
 	i = -1;
 	while (env[++i])
 		if (ft_strchr(env[i], '='))
@@ -38,7 +44,7 @@ int				ft_exe(char *func, char **argu, char **env, t_args *mini)
 	ft_free_arr(paths);
 	if (bool == 0)
 	{
-		ft_error();
+		ft_arg_error(mini);
 		exit(0);
 	}
 	return (1);

@@ -26,9 +26,9 @@ char	**ft_cd(char **env, t_args *mini)
 		free(pwd);
 		pwd = ft_strjoin(pwd, mini->commands[1]);
 	}
-	if (!(error = opendir(pwd)))
+	if ((error = opendir(pwd)) <= 0)
 	{
-		ft_error();
+		ft_error(mini);
 		free(pwd);
 		return (env);
 	}

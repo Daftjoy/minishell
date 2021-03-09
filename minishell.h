@@ -34,7 +34,7 @@ typedef struct	s_args
 	char		**args2;
 	char		**commands;
 	char		*type;
-	char		*exit_status;
+	int			exit_status;
 	int			in;
 	int			out;
 	int			arg;
@@ -53,7 +53,7 @@ int				ft_count(char *str, int opt);
 char			*ft_dquotes(char **env, char *argu, int opt, t_args *mini);
 char			*ft_dquotes2(char *str, char **env, char *argu, t_args *mini);
 void			ft_d(int fd_file);
-void			ft_error(void);
+void			ft_error(t_args *mini);
 int				ft_exe(char *func, char **argu, char **env, t_args *mini);
 int				**ft_fd_creater(t_args *mini, int *j);
 void			ft_free_arr(char **arr);
@@ -76,6 +76,8 @@ void			ft_runcmmd(char **env, t_args *mini);
 char			*ft_squotes(char *argu);
 int				ft_wait(int **fd, char **env, t_args *mini, int pipe_numb);
 int				ft_wcount_2(char const *s, unsigned int w, int n);
+char			*ft_mini_atoi(int	num);
+void			ft_arg_error(t_args *mini);
 
 /*
 **							BUILTINS

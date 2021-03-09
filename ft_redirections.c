@@ -27,7 +27,7 @@ void	ft_redir(t_args *mini, char **env)
 		if (pid == 0)
 			ft_exe(mini->commands[0], mini->commands, env, mini);
 		else
-			wait(NULL);
+			waitpid(pid, &mini->exit_status, 0);
 		return ;
 	}
 	else
@@ -47,7 +47,7 @@ void	ft_only_redir(t_args *mini, char **env)
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
-		wait(NULL);
+		waitpid(pid, &mini->exit_status, 0);
 	if (mini->type[mini->arg] == '|')
 	{
 		mini->arg++;

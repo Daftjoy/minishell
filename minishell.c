@@ -53,9 +53,6 @@ void	ft_loop(char **env)
 	env2[i] = 0;
 	while (get_next_line(0, &mini->main_chain))
 	{
-		mini->exit_status = malloc(2);
-		mini->exit_status[0] = (char)errno + 48;
-		mini->exit_status[1] = '\0';
 		mini->args = ft_split(mini->main_chain, ';');
 		if (mini->args)
 		{
@@ -63,7 +60,6 @@ void	ft_loop(char **env)
 			ft_free_arr(mini->args);
 		}
 		write(1, "... ", 4);
-		free(mini->exit_status);
 		free(mini->main_chain);
 	}
 	free(mini);

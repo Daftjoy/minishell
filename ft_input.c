@@ -60,7 +60,7 @@ void	ft_input_2(char **env, t_args *mini, int fd_file)
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
-		wait(NULL);
+		waitpid(pid, &mini->exit_status, 0);
 }
 
 void	ft_d(int fd_file)
