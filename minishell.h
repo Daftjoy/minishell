@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/08 20:23:30 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/09 19:47:56 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,13 @@ typedef struct	s_args
 **							MINISHELL
 */
 
+int				ft_arg_error(t_args *mini, int opt);
 char			**ft_argu(char *arg);
 int				ft_count(char *str, int opt);
 char			*ft_dquotes(char **env, char *argu, int opt, t_args *mini);
 char			*ft_dquotes2(char *str, char **env, char *argu, t_args *mini);
 void			ft_d(int fd_file);
-void			ft_error(t_args *mini);
+void			ft_error(void);
 int				ft_exe(char *func, char **argu, char **env, t_args *mini);
 int				**ft_fd_creater(t_args *mini, int *j);
 void			ft_free_arr(char **arr);
@@ -66,6 +67,7 @@ void			ft_input(t_args *mini, char **env);
 void			ft_input_2(char **env, t_args *mini, int fd_file);
 void			ft_input_pipe(char **env, t_args *mini, int fd_file);
 int				**ft_mid_dup(int **fd, char **env, t_args *mini, int *i);
+char			*ft_mini_itoa(int	num);
 void			ft_only_redir(t_args *mini, char **env);
 int				ft_open_file(t_args	*mini, int i);
 char			**ft_parser(char **argu, char **env, t_args *mini);
@@ -73,11 +75,13 @@ int				ft_pipe(t_args *mini, char **env);
 void			ft_read_command(char **env, t_args *mini);
 void			ft_redir(t_args *mini, char **env);
 void			ft_runcmmd(char **env, t_args *mini);
+void			sig_int(int code);
+void			sig_quit(int code);
 char			*ft_squotes(char *argu);
 int				ft_wait(int **fd, char **env, t_args *mini, int pipe_numb);
 int				ft_wcount_2(char const *s, unsigned int w, int n);
-char			*ft_mini_atoi(int	num);
-void			ft_arg_error(t_args *mini);
+
+
 
 /*
 **							BUILTINS

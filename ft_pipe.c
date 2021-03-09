@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipe.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:11:35 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/08 19:56:20 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/09 20:41:45 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int		**ft_mid_dup(int **fd, char **env, t_args *mini, int *j)
 	mini->arg++;
 	while (mini->type[mini->arg] == '|')
 	{
+		ft_free_arr(mini->commands);
 		mini->commands = ft_split(mini->args2[mini->arg], ' ');
 		close(fd[i - 1][1]);
 		pipe(fd[i]);
@@ -95,11 +96,12 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 	i = 0;
 	fd_file = 0;
 	fd = ft_mid_dup(fd, env, mini, &i);
+	ft_free_arr(mini->commands);
 	mini->commands = ft_split(mini->args2[mini->arg], ' ');
 	close(fd[i - 1][1]);
 	if (i > 1)
 		close(fd[i - 2][0]);
-	if (mini->type[mini->arg] == '>')
+	if (mini->type[mini->arg] == '>' || mini->type[mini->arg] == ',')
 		fd_file = ft_open_file(mini, i);
 	pid = fork();
 	if (pid == 0)
@@ -112,5 +114,6 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 	}
 	else
 		waitpid(pid, &mini->exit_status, 0);
+	ft_free_arr(mini->commands);
 	return (fd);
 }

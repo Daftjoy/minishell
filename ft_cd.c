@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:38:16 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/08 19:52:11 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/09 16:47:50 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**ft_cd(char **env, t_args *mini)
 	}
 	if ((error = opendir(pwd)) <= 0)
 	{
-		ft_error(mini);
+		ft_error();
 		free(pwd);
 		return (env);
 	}

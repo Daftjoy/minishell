@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirections.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:25:13 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/08 19:27:26 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/09 20:19:51 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,19 @@ void	ft_only_redir(t_args *mini, char **env)
 
 int		ft_open_file(t_args *mini, int i)
 {
-	int fd_file;
+	int		fd_file;
+	char	*str;
 
 	i = 0;
 	while (mini->type[mini->arg] == ',' || mini->type[mini->arg] == '>')
 	{
+		str = ft_strtrim(mini->args2[mini->arg + 1], " ");
 		if (mini->type[mini->arg] == ',')
-			fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
-			O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
+			fd_file = open(str, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
 		else
-			fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
-			O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+			fd_file = open(str, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
 		mini->arg++;
+		free(str);
 	}
 	return (fd_file);
 }

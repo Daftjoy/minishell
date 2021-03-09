@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:23:38 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/08 19:25:28 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/09 19:52:19 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ void	ft_loop(char **env)
 	int		i;
 	char	**env2;
 
+	signal(SIGINT, &sig_int);
+	signal(SIGQUIT, &sig_quit);
 	mini = malloc(sizeof(t_args));
+	mini->exit_status = 0;
 	mini->main_chain = 0;
 	mini->args = 0;
 	write(1, "... ", 4);

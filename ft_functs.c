@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_functs.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/08 19:55:57 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/09 19:17:28 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,23 @@ char	**ft_functs(char **env, t_args *mini)
 	else
 		ft_runcmmd(env, mini);
 	return (env);
+}
+
+void	sig_int(int code)
+{
+	(void)code;
+	write(1, "\b\b  ", 4);
+	write(1, "\n", 1);
+	write(1, "... ", 4);
+}
+
+void	sig_quit(int code)
+{
+	char num;
+
+	num = code + 48;
+	write(STDOUT_FILENO, "Quit: ", 6);
+	write(1, &num, 1);
+	write(1, "\n", 1);
+	return ;
 }

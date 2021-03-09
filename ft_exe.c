@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exe.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:51:00 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/08 19:51:01 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/09 20:45:10 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,15 @@ int				ft_exe(char *func, char **argu, char **env, t_args *mini)
 {
 	int		i;
 	char	**paths;
-	int		bool;
+	char	*join;
+	char	*join2;
 
 	paths = 0;
-	bool = 0;
 	argu = ft_parser(argu, env, mini);
 	mini->exit_status = 0;
 	if (argu[0][0] == '/')
 		if ((execve(argu[0], argu, env)) < 0)
-		{
-			ft_error(mini);
-			printf("%d\n", errno);
-			exit(errno);
-		}
+			exit(ft_arg_error(mini, 0));
 	i = -1;
 	while (env[++i])
 		if (ft_strchr(env[i], '='))
@@ -38,14 +34,16 @@ int				ft_exe(char *func, char **argu, char **env, t_args *mini)
 		ft_echo_pwd(argu);
 	i = -1;
 	while (paths[++i])
-		if ((execve(ft_strjoin(ft_strjoin(paths[i], "/"), func),
-		argu, env)) > 0)
-			bool = 1;
-	ft_free_arr(paths);
-	if (bool == 0)
 	{
-		ft_arg_error(mini);
-		exit(0);
+		join = ft_strjoin(paths[i], "/");
+		join2 = ft_strjoin(join, func);
+		execve(join2, argu, env);
+		free(join);
+		free(join2);
 	}
+	i = 1;
+	ft_free_arr(paths);
+	if (i == 1)
+		exit(ft_arg_error(mini, 1));
 	return (1);
 }
