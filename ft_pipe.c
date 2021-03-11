@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:11:35 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/09 20:41:45 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:57:18 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,19 @@ int		ft_pipe(t_args *mini, char **env)
 	if (pid == 0)
 		fd = ft_firstdup(fd, env, mini);
 	else
-		fd = ft_final_dup(fd, env, mini);
+	{
+		waitpid(pid, &g_status, 0);
+		if (g_status != 0)
+		{
+			pid = fork();
+			if (pid == 0)
+				exit(ft_arg_error(mini, 1));
+			else
+				wait(NULL);
+		}
+		else
+			fd = ft_final_dup(fd, env, mini);
+	}
 	return (ft_wait(fd, env, mini, pipe_numb));
 }
 
@@ -61,13 +73,16 @@ int		**ft_mid_dup(int **fd, char **env, t_args *mini, int *j)
 {
 	pid_t	pid;
 	int		i;
+	char	*trim;
 
 	i = 1;
 	mini->arg++;
-	while (mini->type[mini->arg] == '|')
+	while (mini->type[mini->arg] == '|' && g_status == 0)
 	{
 		ft_free_arr(mini->commands);
-		mini->commands = ft_split(mini->args2[mini->arg], ' ');
+		trim = ft_mini_trim(mini->args2[mini->arg]);
+		mini->commands = ft_split(trim, ' ');
+		free (trim);
 		close(fd[i - 1][1]);
 		pipe(fd[i]);
 		pid = fork();
@@ -79,6 +94,18 @@ int		**ft_mid_dup(int **fd, char **env, t_args *mini, int *j)
 			dup2(fd[i][1], 1);
 			close(fd[i][1]);
 			ft_exe(mini->commands[0], mini->commands, env, mini);
+		}
+		else
+		{
+			waitpid(pid, &g_status, 0);
+			if (g_status != 0)
+			{
+				pid = fork();
+				if (pid == 0)
+					exit(ft_arg_error(mini, 1));
+				else
+					wait(NULL);
+			}
 		}
 		i++;
 		mini->arg++;
@@ -92,12 +119,15 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 	int		i;
 	int		fd_file;
 	pid_t	pid;
+	char	*trim;
 
 	i = 0;
 	fd_file = 0;
 	fd = ft_mid_dup(fd, env, mini, &i);
 	ft_free_arr(mini->commands);
-	mini->commands = ft_split(mini->args2[mini->arg], ' ');
+	trim = ft_mini_trim(mini->args2[mini->arg]);
+	mini->commands = ft_split(trim, ' ');
+	free (trim);
 	close(fd[i - 1][1]);
 	if (i > 1)
 		close(fd[i - 2][0]);
@@ -113,7 +143,7 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
-		waitpid(pid, &mini->exit_status, 0);
+		waitpid(pid, &g_status, 0);
 	ft_free_arr(mini->commands);
 	return (fd);
 }

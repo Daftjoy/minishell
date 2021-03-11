@@ -6,32 +6,78 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:25:13 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/09 20:19:51 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:57:27 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_redir(t_args *mini, char **env)
+int		ft_trim_counter(char *str)
 {
-	int pid;
+	int i;
+	int j;
+	int opt;
+	int k;
 
-	mini->commands = ft_split(mini->args2[mini->arg], ' ');
+	i = 0;
+	j = 0;
+	k = 0;
+	opt = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && !opt && str[i] > 0)
+			opt = 1;
+		if (opt)
+			j++;
+		i++;
+	}
+	return (j);
+}
+
+char	*ft_mini_trim(char *str)
+{
+	int		i;
+	int		j;
+	int		k;
+	int		opt;
+	char	*ret;
+
+	j = ft_trim_counter(str);
+	ret = malloc(j + 1);
+	i = 0;
+	k = 0;
+	opt = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && !opt && str[i] > 0)
+			opt = 1;
+		if (opt)
+		{
+			ret[k] = str[i];
+			k++;
+		}
+		i++;
+	}
+	ret[k] = '\0';
+	return (ret);
+}
+
+char	**ft_redir(t_args *mini, char **env)
+{
+	char *trim;
+
+	trim = ft_mini_trim(mini->args2[mini->arg]);
+	mini->commands = ft_split(trim, ' ');
+	free(trim);
 	if (mini->type[mini->arg] == ',' || mini->type[mini->arg] == '>')
 		ft_only_redir(mini, env);
 	else if (mini->type[mini->arg] == '<')
 		ft_input(mini, env);
 	else if (!(mini->type[mini->arg]))
-	{
-		pid = fork();
-		if (pid == 0)
-			ft_exe(mini->commands[0], mini->commands, env, mini);
-		else
-			waitpid(pid, &mini->exit_status, 0);
-		return ;
-	}
+		env = ft_functs(env, mini);
 	else
 		ft_pipe(mini, env);
+	return (env);
 }
 
 void	ft_only_redir(t_args *mini, char **env)
@@ -47,11 +93,11 @@ void	ft_only_redir(t_args *mini, char **env)
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
-		waitpid(pid, &mini->exit_status, 0);
+		waitpid(pid, &g_status, 0);
 	if (mini->type[mini->arg] == '|')
 	{
 		mini->arg++;
-		ft_redir(mini, env);
+		env = ft_redir(mini, env);
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/09 19:17:28 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:56:45 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 
 void	ft_runcmmd(char **env, t_args *mini)
 {
-	pid_t	childpid;
-
-	childpid = fork();
-	if (childpid >= 0)
+	g_pid = fork();
+	if (g_pid >= 0)
 	{
-		if (childpid != 0)
-			waitpid(childpid, &mini->exit_status, 0);
+		if (g_pid != 0)
+			waitpid(g_pid, &g_status, 0);
 		else
 			ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
@@ -48,26 +46,9 @@ char	**ft_functs(char **env, t_args *mini)
 	}
 	else if (!ft_strcmp("cd", mini->commands[0]))
 		env = ft_cd(env, mini);
+	else if (!ft_strcmp("env", mini->commands[0]))
+		ft_env(env);
 	else
 		ft_runcmmd(env, mini);
 	return (env);
-}
-
-void	sig_int(int code)
-{
-	(void)code;
-	write(1, "\b\b  ", 4);
-	write(1, "\n", 1);
-	write(1, "... ", 4);
-}
-
-void	sig_quit(int code)
-{
-	char num;
-
-	num = code + 48;
-	write(STDOUT_FILENO, "Quit: ", 6);
-	write(1, &num, 1);
-	write(1, "\n", 1);
-	return ;
 }

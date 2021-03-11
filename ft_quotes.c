@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_quotes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/01 16:11:34 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/08 19:46:34 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:27:56 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ char	*ft_dquotes2(char *ret, char **env, char *argu, t_args *mini)
 	!= ' ' && argu[mini->quotes_cont + j] != '\"'
 	&& argu[mini->quotes_cont + j] != '\'')
 		j++;
-	if (ft_find_var(env, ft_substr(&argu[mini->quotes_cont], 1, j - 1), mini))
+	if (ft_find_var(env, ft_substr(&argu[mini->quotes_cont], 1, j - 1)))
 		ret = ret ? ft_strjoin(ret, ft_find_var(env,
-		ft_substr(&argu[mini->quotes_cont], 1, j - 1), mini)) :
+		ft_substr(&argu[mini->quotes_cont], 1, j - 1))) :
 		ft_substr(&argu[mini->quotes_cont], 1, j - 1);
 	mini->quotes_cont += j - 1;
 	return (ret);

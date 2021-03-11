@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/09 19:47:56 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:27:33 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,12 @@ int				ft_count(char *str, int opt);
 char			*ft_dquotes(char **env, char *argu, int opt, t_args *mini);
 char			*ft_dquotes2(char *str, char **env, char *argu, t_args *mini);
 void			ft_d(int fd_file);
+void			ft_env(char **env);
 void			ft_error(void);
 int				ft_exe(char *func, char **argu, char **env, t_args *mini);
 int				**ft_fd_creater(t_args *mini, int *j);
 void			ft_free_arr(char **arr);
-char			*ft_find_var(char **env, char *var, t_args *mini);
+char			*ft_find_var(char **env, char *var);
 int				**ft_firstdup(int **fd, char **env, t_args *mini);
 int				**ft_final_dup(int **fd, char **env, t_args *mini);
 char			*ft_find(char const *s);
@@ -68,12 +69,14 @@ void			ft_input_2(char **env, t_args *mini, int fd_file);
 void			ft_input_pipe(char **env, t_args *mini, int fd_file);
 int				**ft_mid_dup(int **fd, char **env, t_args *mini, int *i);
 char			*ft_mini_itoa(int	num);
+char			*ft_mini_trim(char *str);
+int				ft_trim_counter(char *str);
 void			ft_only_redir(t_args *mini, char **env);
 int				ft_open_file(t_args	*mini, int i);
 char			**ft_parser(char **argu, char **env, t_args *mini);
 int				ft_pipe(t_args *mini, char **env);
-void			ft_read_command(char **env, t_args *mini);
-void			ft_redir(t_args *mini, char **env);
+char			**ft_read_command(char **env, t_args *mini);
+char			**ft_redir(t_args *mini, char **env);
 void			ft_runcmmd(char **env, t_args *mini);
 void			sig_int(int code);
 void			sig_quit(int code);
@@ -116,6 +119,8 @@ char			**ft_split2(char *s, t_args *mini);
 int				ft_strcmp(const char *s1, const char *s2);
 char			*ft_strtrim(char const *s1, char const *set);
 
+pid_t	g_pid;
+int		g_status;
 #  endif
 # endif
 #endif

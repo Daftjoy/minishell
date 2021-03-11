@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:38:16 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/09 16:47:50 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:25:55 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,17 @@ char	**ft_cd(char **env, t_args *mini)
 	{
 		ft_error();
 		free(pwd);
+		g_status = 256;
 		return (env);
 	}
 	closedir(error);
 	old_pwd = ft_strjoin("OLDPWD=", ft_pwd(1));
-	ft_export(env, old_pwd);
+	//env = ft_export(env, old_pwd);
 	free(old_pwd);
 	chdir(pwd);
 	free(pwd);
 	pwd = ft_strjoin("PWD=", ft_pwd(1));
-	ft_export(env, pwd);
+	//env = ft_export(env, pwd);
 	free(pwd);
 	return (env);
 }

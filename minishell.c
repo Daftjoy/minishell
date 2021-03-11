@@ -6,13 +6,13 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:23:38 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/09 19:52:19 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:45:00 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_read_command(char **env, t_args *mini)
+char	**ft_read_command(char **env, t_args *mini)
 {
 	int		i;
 
@@ -21,16 +21,10 @@ void	ft_read_command(char **env, t_args *mini)
 	{
 		mini->args2 = ft_split2(mini->args[i], mini);
 		mini->arg = 0;
-		if (mini->type[0] == 0)
-		{
-			mini->commands = ft_split(mini->args2[0], ' ');
-			env = ft_functs(env, mini);
-			ft_free_arr(mini->commands);
-		}
-		else
-			ft_redir(mini, env);
+		env = ft_redir(mini, env);
 		ft_free_arr(mini->args2);
 	}
+	return (env);
 }
 
 void	ft_loop(char **env)
@@ -42,31 +36,30 @@ void	ft_loop(char **env)
 	signal(SIGINT, &sig_int);
 	signal(SIGQUIT, &sig_quit);
 	mini = malloc(sizeof(t_args));
-	mini->exit_status = 0;
 	mini->main_chain = 0;
 	mini->args = 0;
 	write(1, "... ", 4);
 	i = 0;
 	while (env[i])
 		i++;
-	env2 = malloc(sizeof(char *) * i);
+	env2 = malloc(sizeof(char *) * i + 1);
 	i = -1;
 	while (env[++i])
 		env2[i] = ft_strdup(env[i]);
 	env2[i] = 0;
-	while (get_next_line(0, &mini->main_chain))
+	while (get_next_line(0, &mini->main_chain) > 0)
 	{
 		mini->args = ft_split(mini->main_chain, ';');
 		if (mini->args)
 		{
-			ft_read_command(env2, mini);
+			env2 = ft_read_command(env2, mini);
 			ft_free_arr(mini->args);
 		}
 		write(1, "... ", 4);
 		free(mini->main_chain);
 	}
+	write(1, "exit\n", 5);
 	free(mini);
-	ft_free_arr(env2);
 }
 
 int		main(int argc, char **argv, char **env)

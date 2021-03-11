@@ -1,32 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_error.c                                         :+:      :+:    :+:   */
+/*   ft_ctrl.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/08 19:50:53 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/10 16:53:04 by antmarti         ###   ########.fr       */
+/*   Created: 2021/03/11 16:33:26 by antmarti          #+#    #+#             */
+/*   Updated: 2021/03/11 18:12:23 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_error(void)
+void	sig_int(int code)
 {
-	write(1, "Error: ", 7);
-	write(1, strerror(errno), ft_strlen(strerror(errno)));
-	write(1, "\n", 1);
+	(void)code;
+	if (g_pid == 0)
+	{
+		write(1, "\b\b  ", 4);
+		write(1, "\n", 1);
+		write(1, "... ", 4);
+	}
+	else
+		write(1, "\n", 1);
+	g_pid = 0;
 }
 
-int		ft_arg_error(t_args *mini, int opt)
+void	sig_quit(int code)
 {
-	write(1, "Error: ", 7);
-	write(1, mini->commands[0], ft_strlen(mini->commands[0]));
-	if (opt)
-		write(1, ": Command not found", 19);
+	char num;
+
+	num = code + 48;
+	if (g_pid != 0)
+	{
+		write(STDOUT_FILENO, "Quit: ", 6);
+		write(1, &num, 1);
+		write(1, "\n", 1);
+	}
 	else
-		write(1, ": No such file or directory", 27);
-	write(1, "\n", 1);
-	return (errno * 127 / 2);
+		write(STDOUT_FILENO, "\b\b  \b\b", 6);
+	g_pid = 0;
+	return ;
 }

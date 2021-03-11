@@ -6,13 +6,13 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:45:32 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/09 19:26:30 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:46:20 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_find_var(char **env, char *var, t_args *mini)
+char	*ft_find_var(char **env, char *var)
 {
 	int		i;
 	char	*str;
@@ -21,7 +21,7 @@ char	*ft_find_var(char **env, char *var, t_args *mini)
 	i = 0;
 	str = 0;
 	if (!ft_strcmp(var, "?"))
-		str = ft_strdup(ft_mini_itoa(mini->exit_status / 256));
+		str = ft_strdup(ft_mini_itoa(g_status / 256));
 	else
 		while (env[i])
 		{
