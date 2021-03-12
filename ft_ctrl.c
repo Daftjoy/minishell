@@ -15,6 +15,7 @@
 void	sig_int(int code)
 {
 	(void)code;
+
 	if (g_pid == 0)
 	{
 		write(1, "\b\b  ", 4);
@@ -22,7 +23,10 @@ void	sig_int(int code)
 		write(1, "... ", 4);
 	}
 	else
+	{
+		g_sigint = 1;
 		write(1, "\n", 1);
+	}
 	g_pid = 0;
 }
 
@@ -33,6 +37,7 @@ void	sig_quit(int code)
 	num = code + 48;
 	if (g_pid != 0)
 	{
+		g_sigint = 2;
 		write(STDOUT_FILENO, "Quit: ", 6);
 		write(1, &num, 1);
 		write(1, "\n", 1);

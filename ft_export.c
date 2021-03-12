@@ -60,9 +60,10 @@ char	**ft_export(char **env, char *var)
 	if (!env[j] && j < ft_check_env(env, var))
 	{
 		env2[j] = ft_strdup(var);
-		env2[++j] = malloc(1);
-		env2[j] = 0;
+		j++;
 	}
+	env2[j] = malloc(1);
+	env2[j] = 0;
 	ft_free_arr(env);
 	return (env2);
 }

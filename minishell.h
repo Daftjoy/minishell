@@ -121,6 +121,7 @@ char			*ft_strtrim(char const *s1, char const *set);
 
 pid_t	g_pid;
 int		g_status;
+int		g_sigint;
 #  endif
 # endif
 #endif

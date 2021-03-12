@@ -35,12 +35,12 @@ char	**ft_cd(char **env, t_args *mini)
 	}
 	closedir(error);
 	old_pwd = ft_strjoin("OLDPWD=", ft_pwd(1));
-	//env = ft_export(env, old_pwd);
+	env = ft_export(env, old_pwd);
 	free(old_pwd);
 	chdir(pwd);
 	free(pwd);
 	pwd = ft_strjoin("PWD=", ft_pwd(1));
-	//env = ft_export(env, pwd);
+	env = ft_export(env, pwd);
 	free(pwd);
 	return (env);
 }

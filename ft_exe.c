@@ -49,5 +49,5 @@ int				ft_exe(char *func, char **argu, char **env, t_args *mini)
 	ft_free_arr(paths);
 	if (i == 1)
 		exit(ft_arg_error(mini, 1));
-	return (1);
+	return (g_status);
 }

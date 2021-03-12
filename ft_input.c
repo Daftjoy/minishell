@@ -32,12 +32,11 @@ void	ft_input_pipe(char **env, t_args *mini, int fd_file)
 {
 	int		pipe_numb;
 	int		**fd;
-	pid_t	pid;
 
 	pipe_numb = 0;
 	fd = ft_fd_creater(mini, &pipe_numb);
-	pid = fork();
-	if (pid == 0)
+	g_pid = fork();
+	if (g_pid == 0)
 	{
 		ft_d(fd_file);
 		fd = ft_firstdup(fd, env, mini);
@@ -49,10 +48,8 @@ void	ft_input_pipe(char **env, t_args *mini, int fd_file)
 
 void	ft_input_2(char **env, t_args *mini, int fd_file)
 {
-	pid_t	pid;
-
-	pid = fork();
-	if (pid == 0)
+	g_pid = fork();
+	if (g_pid == 0)
 	{
 		ft_d(fd_file);
 		if (mini->type[mini->arg] == '>' || mini->type[mini->arg] == ',')
@@ -60,7 +57,7 @@ void	ft_input_2(char **env, t_args *mini, int fd_file)
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
-		waitpid(pid, &g_status, 0);
+		waitpid(g_pid, &g_status, 0);
 }
 
 void	ft_d(int fd_file)

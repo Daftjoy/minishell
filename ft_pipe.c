@@ -15,20 +15,19 @@
 int		ft_pipe(t_args *mini, char **env)
 {
 	int		**fd;
-	pid_t	pid;
 	int		pipe_numb;
 
 	fd = ft_fd_creater(mini, &pipe_numb);
-	pid = fork();
-	if (pid == 0)
+	g_pid = fork();
+	if (g_pid == 0)
 		fd = ft_firstdup(fd, env, mini);
 	else
 	{
-		waitpid(pid, &g_status, 0);
+		waitpid(g_pid, &g_status, 0);
 		if (g_status != 0)
 		{
-			pid = fork();
-			if (pid == 0)
+			g_pid = fork();
+			if (g_pid == 0)
 				exit(ft_arg_error(mini, 1));
 			else
 				wait(NULL);
@@ -71,7 +70,6 @@ int		**ft_firstdup(int **fd, char **env, t_args *mini)
 
 int		**ft_mid_dup(int **fd, char **env, t_args *mini, int *j)
 {
-	pid_t	pid;
 	int		i;
 	char	*trim;
 
@@ -85,8 +83,8 @@ int		**ft_mid_dup(int **fd, char **env, t_args *mini, int *j)
 		free (trim);
 		close(fd[i - 1][1]);
 		pipe(fd[i]);
-		pid = fork();
-		if (pid == 0)
+		g_pid = fork();
+		if (g_pid == 0)
 		{
 			close(fd[i][0]);
 			dup2(fd[i - 1][0], 0);
@@ -97,11 +95,11 @@ int		**ft_mid_dup(int **fd, char **env, t_args *mini, int *j)
 		}
 		else
 		{
-			waitpid(pid, &g_status, 0);
+			waitpid(g_pid, &g_status, 0);
 			if (g_status != 0)
 			{
-				pid = fork();
-				if (pid == 0)
+				g_pid = fork();
+				if (g_pid == 0)
 					exit(ft_arg_error(mini, 1));
 				else
 					wait(NULL);
@@ -118,7 +116,6 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 {
 	int		i;
 	int		fd_file;
-	pid_t	pid;
 	char	*trim;
 
 	i = 0;
@@ -133,8 +130,8 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 		close(fd[i - 2][0]);
 	if (mini->type[mini->arg] == '>' || mini->type[mini->arg] == ',')
 		fd_file = ft_open_file(mini, i);
-	pid = fork();
-	if (pid == 0)
+	g_pid = fork();
+	if (g_pid == 0)
 	{
 		dup2(fd[i - 1][0], 0);
 		close(fd[i - 1][0]);
@@ -143,7 +140,7 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	}
 	else
-		waitpid(pid, &g_status, 0);
+		waitpid(g_pid, &g_status, 0);
 	ft_free_arr(mini->commands);
 	return (fd);
 }
