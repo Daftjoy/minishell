@@ -48,7 +48,11 @@ char	**ft_functs(char **env, t_args *mini)
 		env = ft_cd(env, mini);
 	else if (!ft_strcmp("env", mini->commands[0]))
 		ft_env(env);
-	else
+	else if (!mini->type[0])
 		ft_runcmmd(env, mini);
+	else
+		ft_exe(mini->commands[0], mini->commands, env, mini);
+	if (mini->type[0])
+		exit(g_status/256);
 	return (env);
 }

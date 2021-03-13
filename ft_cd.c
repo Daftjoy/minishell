@@ -28,9 +28,8 @@ char	**ft_cd(char **env, t_args *mini)
 	}
 	if ((error = opendir(pwd)) <= 0)
 	{
-		ft_error();
+		ft_arg_error(mini, 0);
 		free(pwd);
-		g_status = 256;
 		return (env);
 	}
 	closedir(error);

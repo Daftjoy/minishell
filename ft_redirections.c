@@ -90,10 +90,14 @@ void	ft_only_redir(t_args *mini, char **env)
 	if (pid == 0)
 	{
 		dup2(fd_file, 1);
-		ft_exe(mini->commands[0], mini->commands, env, mini);
+		env = ft_functs(env, mini);
 	}
 	else
+	{
 		waitpid(pid, &g_status, 0);
+		if (g_status != 0)
+			ft_pipe_error(mini);
+	}
 	if (mini->type[mini->arg] == '|')
 	{
 		mini->arg++;

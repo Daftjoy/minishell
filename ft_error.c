@@ -17,16 +17,52 @@ void	ft_error(void)
 	write(1, "Error: ", 7);
 	write(1, strerror(errno), ft_strlen(strerror(errno)));
 	write(1, "\n", 1);
+	g_status = 256;
 }
 
 int		ft_arg_error(t_args *mini, int opt)
 {
+		if (!mini->type[mini->arg - 1])
+		{
+			write(1, "Error: ", 7);
+			write(1, mini->commands[0], ft_strlen(mini->commands[0]));
+		}
+		if (opt)
+		{
+			g_status = 127;
+			if (!mini->type[mini->arg - 1])
+				write(1, ": Command not found", 19);
+		}
+		else
+		{
+			g_status = 256;
+			if (!mini->type[mini->arg - 1])
+			{
+				if (mini->commands[1])
+				{
+					write(1, ": ", 2);
+					write(1, mini->commands[1], ft_strlen(mini->commands[1]));
+				}
+				write(1, ": No such file or directory", 27);
+			}
+		}
+		if (!mini->type[mini->arg - 1])
+			write(1, "\n", 1);	
+	return (g_status);
+}
+
+int		ft_pipe_error(t_args *mini)
+{
 	write(1, "Error: ", 7);
 	write(1, mini->commands[0], ft_strlen(mini->commands[0]));
-	if (opt)
+	if (g_status == 127 * 256)
 		write(1, ": Command not found", 19);
 	else
+	{
+		write(1, ": ", 2);
+		write(1, mini->commands[1], ft_strlen(mini->commands[1]));
 		write(1, ": No such file or directory", 27);
+	}
 	write(1, "\n", 1);
-	return (errno * 127 / 2);
+	return (g_status);
 }

@@ -41,7 +41,7 @@ typedef struct	s_args
 	int			fd;
 	int			sig_int;
 	int			quotes_cont;
-	pid_t		pid;
+	int			pipe_num;
 }				t_args;
 
 /*
@@ -59,6 +59,7 @@ void			ft_error(void);
 int				ft_exe(char *func, char **argu, char **env, t_args *mini);
 int				**ft_fd_creater(t_args *mini, int *j);
 void			ft_free_arr(char **arr);
+void			ft_free_int(int **arr);
 char			*ft_find_var(char **env, char *var);
 int				**ft_firstdup(int **fd, char **env, t_args *mini);
 int				**ft_final_dup(int **fd, char **env, t_args *mini);
@@ -75,6 +76,7 @@ void			ft_only_redir(t_args *mini, char **env);
 int				ft_open_file(t_args	*mini, int i);
 char			**ft_parser(char **argu, char **env, t_args *mini);
 int				ft_pipe(t_args *mini, char **env);
+int				ft_pipe_error(t_args *mini);
 char			**ft_read_command(char **env, t_args *mini);
 char			**ft_redir(t_args *mini, char **env);
 void			ft_runcmmd(char **env, t_args *mini);

@@ -21,3 +21,13 @@ void	ft_free_arr(char **arr)
 		free(arr[i]);
 	free(arr);
 }
+
+void	ft_free_int(int	**arr)
+{
+	int	i;
+
+	i = -1;
+	while (arr[++i])
+		free(arr[i]);
+	free(arr);
+}

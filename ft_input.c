@@ -20,6 +20,11 @@ void	ft_input(t_args *mini, char **env)
 	{
 		fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
 		O_RDONLY, S_IRWXU);
+		if(fd_file < 0)
+		{
+			ft_error();
+			return ;
+		}
 		mini->arg++;
 	}
 	if (mini->type[mini->arg] == '|')
@@ -43,6 +48,7 @@ void	ft_input_pipe(char **env, t_args *mini, int fd_file)
 	}
 	else
 		fd = ft_final_dup(fd, env, mini);
+
 	ft_wait(fd, env, mini, pipe_numb);
 }
 
