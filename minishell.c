@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:23:38 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/11 17:45:00 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 20:38:02 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,12 @@ char	**ft_read_command(char **env, t_args *mini)
 	return (env);
 }
 
-void	ft_loop(char **env)
+char	**ft_new_env(char **env)
 {
-	t_args	*mini;
 	int		i;
-	char	**env2;
 	char	**split;
+	char	**env2;
 
-	signal(SIGINT, &sig_int);
-	signal(SIGQUIT, &sig_quit);
-	mini = malloc(sizeof(t_args));
-	mini->main_chain = 0;
-	mini->args = 0;
-	write(1, "... ", 4);
 	i = 0;
 	while (env[i])
 		i++;
@@ -54,6 +47,29 @@ void	ft_loop(char **env)
 		ft_free_arr(split);
 	}
 	env2[i] = 0;
+	return (env2);
+}
+
+t_args	*ft_init(void)
+{
+	t_args *mini;
+
+	signal(SIGINT, &sig_int);
+	signal(SIGQUIT, &sig_quit);
+	mini = malloc(sizeof(t_args));
+	mini->main_chain = 0;
+	mini->args = 0;
+	return (mini);
+}
+
+void	ft_loop(char **env)
+{
+	t_args	*mini;
+	char	**env2;
+
+	mini = ft_init();
+	write(1, "... ", 4);
+	env2 = ft_new_env(env);
 	while (get_next_line(0, &mini->main_chain) > 0)
 	{
 		mini->args = ft_split(mini->main_chain, ';');

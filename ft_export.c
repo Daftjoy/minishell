@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:43:01 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/10 21:29:51 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 20:48:33 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ char	**ft_export(char **env, char *var)
 		env2[j] = ft_strdup(var);
 		j++;
 	}
-	env2[j] = malloc(1);
 	env2[j] = 0;
 	ft_free_arr(env);
 	return (env2);

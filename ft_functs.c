@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/11 17:56:45 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 20:38:01 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,17 @@ void	ft_runcmmd(char **env, t_args *mini)
 	}
 }
 
+void	ft_exit(t_args *mini)
+{
+	if (mini->commands[1])
+		ft_noargs(mini);
+	else
+	{
+		write(1, "exit\n", 5);
+		exit(g_status / 256);
+	}
+}
+
 char	**ft_functs(char **env, t_args *mini)
 {
 	int		k;
@@ -38,15 +49,7 @@ char	**ft_functs(char **env, t_args *mini)
 	else if (!(ft_strcmp("unset", mini->commands[0])) && mini->commands[1])
 		env = ft_unset(env, mini);
 	else if (!ft_strcmp("exit", mini->commands[0]))
-	{
-		if (mini->commands[1])
-			ft_noargs(mini);
-		else
-		{
-			write(1, "exit\n", 5);
-			exit(g_status/256);
-		}
-	}
+		ft_exit(mini);
 	else if (!ft_strcmp("cd", mini->commands[0]))
 		env = ft_cd(env, mini);
 	else if (!ft_strcmp("env", mini->commands[0]))
@@ -56,6 +59,6 @@ char	**ft_functs(char **env, t_args *mini)
 	else
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	if (mini->type[0])
-		exit(g_status/256);
+		exit(g_status / 256);
 	return (env);
 }

@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:11:35 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/11 17:57:18 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 20:48:07 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,5 @@ int		**ft_final_dup(int **fd, char **env, t_args *mini)
 	}
 	else
 		waitpid(g_pid, &g_status, 0);
-	ft_free_arr(mini->commands);
 	return (fd);
 }

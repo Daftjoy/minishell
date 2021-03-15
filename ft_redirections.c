@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:25:13 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/11 17:57:27 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 20:48:20 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ char	**ft_redir(t_args *mini, char **env)
 		env = ft_functs(env, mini);
 	else
 		ft_pipe(mini, env);
+	ft_free_arr(mini->commands);
 	return (env);
 }
 

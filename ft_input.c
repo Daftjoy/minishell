@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:26:36 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/11 17:56:56 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 20:49:20 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 void	ft_input(t_args *mini, char **env)
 {
 	int		fd_file;
+	char	*trim;
 
 	while (mini->type[mini->arg] == '<')
 	{
-		fd_file = open(ft_strtrim(mini->args2[mini->arg + 1], " "),
-		O_RDONLY, S_IRWXU);
-		if(fd_file < 0)
+		trim = ft_strtrim(mini->args2[mini->arg + 1], " ");
+		fd_file = open(trim, O_RDONLY, S_IRWXU);
+		if (fd_file < 0)
 		{
 			ft_error();
 			return ;
