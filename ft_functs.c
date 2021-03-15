@@ -39,15 +39,18 @@ char	**ft_functs(char **env, t_args *mini)
 		env = ft_unset(env, mini);
 	else if (!ft_strcmp("exit", mini->commands[0]))
 	{
-		write(1, "exit\n", 5);
 		if (mini->commands[1])
-			write(1, "No arguments accepted\n", 22);
-		exit(0);
+			ft_noargs(mini);
+		else
+		{
+			write(1, "exit\n", 5);
+			exit(g_status/256);
+		}
 	}
 	else if (!ft_strcmp("cd", mini->commands[0]))
 		env = ft_cd(env, mini);
 	else if (!ft_strcmp("env", mini->commands[0]))
-		ft_env(env);
+		ft_env(mini, env);
 	else if (!mini->type[0])
 		ft_runcmmd(env, mini);
 	else

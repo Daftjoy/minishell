@@ -29,6 +29,8 @@ char	**ft_cd(char **env, t_args *mini)
 	if ((error = opendir(pwd)) <= 0)
 	{
 		ft_arg_error(mini, 0);
+		if (mini->type[0])
+			g_status *=2;
 		free(pwd);
 		return (env);
 	}

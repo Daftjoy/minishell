@@ -25,7 +25,7 @@ int				ft_exe(char *func, char **argu, char **env, t_args *mini)
 	if (argu[0][0] == '/')
 		if ((execve(argu[0], argu, env)) < 0)
 		{
-			//ft_arg_error(mini, 0);
+			ft_arg_error(mini, 0);
 			exit(127);
 		}
 	i = -1;

@@ -12,10 +12,12 @@
 
 #include "minishell.h"
 
-void	ft_env(char **env)
+void	ft_env(t_args *mini, char **env)
 {
 	int i;
 
+	if (mini->commands[1])
+		return ft_noargs(mini);
 	i = 0;
 	while (env[i])
 	{
