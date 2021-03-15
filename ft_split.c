@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 18:06:50 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/08 20:23:54 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/15 21:47:39 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,8 @@ int					ft_wcount(char const *s, char c)
 	k = 0;
 	while (s[n])
 	{
-		if (s[n] == c)
-		{
-			n++;
+		if (s[n] == c && n++)
 			continue ;
-		}
 		w++;
 		while (s[n] != c && s[n])
 		{

@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:26:36 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/15 20:49:20 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 21:47:15 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	ft_input_pipe(char **env, t_args *mini, int fd_file)
 	}
 	else
 		fd = ft_final_dup(fd, env, mini);
-
 	ft_wait(fd, env, mini, pipe_numb);
 }
 

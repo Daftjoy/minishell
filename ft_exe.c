@@ -6,28 +6,18 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:51:00 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/11 16:19:39 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 21:16:56 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int				ft_exe(char *func, char **argu, char **env, t_args *mini)
+char			**ft_get_path(char **env)
 {
 	int		i;
-	char	**paths;
-	char	*join;
-	char	*join2;
 	char	**split;
+	char	**paths;
 
-	paths = 0;
-	argu = ft_parser(argu, env, mini);
-	if (argu[0][0] == '/')
-		if ((execve(argu[0], argu, env)) < 0)
-		{
-			ft_arg_error(mini, 0);
-			exit(127);
-		}
 	i = -1;
 	while (env[++i])
 		if (ft_strchr(env[i], '='))
@@ -37,8 +27,15 @@ int				ft_exe(char *func, char **argu, char **env, t_args *mini)
 				paths = ft_split(split[1], ':');
 				ft_free_arr(split);
 			}
-	if (!(ft_strcmp("echo", argu[0])) || !(ft_strcmp("pwd", argu[0])))
-		ft_echo_pwd(argu);
+	return (paths);
+}
+
+void			ft_execute(char **paths, char **argu, char **env, char *func)
+{
+	int		i;
+	char	*join;
+	char	*join2;
+
 	i = -1;
 	while (paths[++i])
 	{
@@ -48,9 +45,25 @@ int				ft_exe(char *func, char **argu, char **env, t_args *mini)
 		free(join);
 		free(join2);
 	}
-	i = 1;
+}
+
+int				ft_exe(char *func, char **argu, char **env, t_args *mini)
+{
+	char	**paths;
+
+	paths = 0;
+	argu = ft_parser(argu, env, mini);
+	if (argu[0][0] == '/')
+		if ((execve(argu[0], argu, env)) < 0)
+		{
+			ft_arg_error(mini, 0);
+			exit(127);
+		}
+	paths = ft_get_path(env);
+	if (!(ft_strcmp("echo", argu[0])) || !(ft_strcmp("pwd", argu[0])))
+		ft_echo_pwd(argu);
+	ft_execute(paths, argu, env, func);
 	ft_free_arr(paths);
-	if (i == 1)
-		exit(ft_arg_error(mini, 1));
+	exit(ft_arg_error(mini, 1));
 	return (g_status);
 }

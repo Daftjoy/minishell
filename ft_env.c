@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/10 13:40:45 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/10 13:47:07 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 21:06:56 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_env(t_args *mini, char **env)
 	int i;
 
 	if (mini->commands[1])
-		return ft_noargs(mini);
+		return (ft_noargs(mini));
 	i = 0;
 	while (env[i])
 	{

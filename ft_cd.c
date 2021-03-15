@@ -6,11 +6,20 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:38:16 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/15 20:58:52 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 21:40:58 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**ft_cd_error(t_args *mini, char *pwd, char **env)
+{
+	ft_arg_error(mini, 0);
+	if (mini->type[0])
+		g_status *= 2;
+	free(pwd);
+	return (env);
+}
 
 char	**ft_cd(char **env, t_args *mini)
 {
@@ -27,13 +36,7 @@ char	**ft_cd(char **env, t_args *mini)
 		pwd = ft_strjoin(pwd, mini->commands[1]);
 	}
 	if ((error = opendir(pwd)) <= 0)
-	{
-		ft_arg_error(mini, 0);
-		if (mini->type[0])
-			g_status *=2;
-		free(pwd);
-		return (env);
-	}
+		return (ft_cd_error(mini, pwd, env));
 	closedir(error);
 	old_pwd = ft_strjoin("OLDPWD=", ft_pwd(1));
 	env = ft_export(env, old_pwd);

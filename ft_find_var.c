@@ -3,35 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   ft_find_var.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:45:32 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/15 20:53:16 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 21:20:41 by agianico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*ft_interrogation(char *str, char *var)
+{
+	char	*it;
+
+	it = ft_mini_itoa(g_status / 256);
+	if (var[1])
+	{
+		str = ft_strjoin(it, &var[1]);
+		free(it);
+	}
+	else
+		str = it;
+	return (str);
+}
 
 char	*ft_find_var(char **env, char *var)
 {
 	int		i;
 	char	*str;
 	char	**split;
-	char	*it;
 
 	i = 0;
 	str = 0;
 	if (var[0] == '?')
-	{
-		it = ft_mini_itoa(g_status / 256);
-		if (var[1])
-		{
-			str = ft_strjoin(it, &var[1]);
-			free(it);
-		}
-		else
-			str = it;
-	}
+		str = ft_interrogation(str, var);
 	else
 		while (env[i])
 		{

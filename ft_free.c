@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agianico <agianico@student.42.fr>          +#+  +:+       +#+        */
+/*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:23:59 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/08 19:53:34 by agianico         ###   ########.fr       */
+/*   Updated: 2021/03/15 21:46:59 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_free_arr(char **arr)
 	free(arr);
 }
 
-void	ft_free_int(int	**arr)
+void	ft_free_int(int **arr)
 {
 	int	i;
 

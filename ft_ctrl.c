@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 16:33:26 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/11 18:12:23 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/15 21:07:10 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	sig_int(int code)
 {
 	(void)code;
-
 	if (g_pid == 0)
 	{
 		write(1, "\b\b  ", 4);
