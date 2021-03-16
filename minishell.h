@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/15 21:51:28 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/16 12:12:21 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void			ft_input_pipe(char **env, t_args *mini, int fd_file);
 char			*ft_interrogation(char *str, char *var);
 int				**ft_mid_dup(int **fd, char **env, t_args *mini, int *i);
 char			**ft_mid_dup2(char **env, t_args *mini, int **fd, int i);
+void			ft_final_dup3(t_args *mini);
 char			*ft_mini_itoa(int	num);
 char			*ft_mini_trim(char *str);
 char			**ft_new_env(char **env);
@@ -105,7 +106,8 @@ void			ft_echo_pwd(char **argu);
 char			**ft_export(char **env, char *var);
 char			*ft_pwd(int opt);
 char			**ft_unset(char **env, t_args *mini);
-char			**ft_unset2(char **env, int j, char **split, char **split_commands);
+char			**ft_unset2(char **env, int j, char **split,
+				char **split_commands);
 
 /*
 **							GNL
