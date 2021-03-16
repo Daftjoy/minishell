@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 12:41:16 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/16 14:01:22 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:25:55 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ int				ft_pipe(t_args *mini, char **env);
 int				ft_pipe_error(t_args *mini);
 char			**ft_read_command(char **env, t_args *mini);
 char			**ft_redir(t_args *mini, char **env, int opt);
-void			ft_runcmmd(char **env, t_args *mini);
 void			sig_int(int code);
 void			sig_quit(int code);
 char			*ft_squotes(char *argu);
@@ -100,7 +99,7 @@ int				ft_wcount_2(char const *s, unsigned int w, int n);
 **							BUILTINS
 */
 
-char	**ft_builtins(t_args *mini, char **env, int *i);
+char			**ft_builtins(t_args *mini, char **env, int *i);
 char			**ft_cd(char **env, t_args *mini);
 void			ft_echo(char **argu);
 void			ft_echo_pwd(char **argu);

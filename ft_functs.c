@@ -6,23 +6,11 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/16 14:02:36 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:25:46 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_runcmmd(char **env, t_args *mini)
-{
-	g_pid = fork();
-	if (g_pid >= 0)
-	{
-		if (g_pid != 0)
-			waitpid(g_pid, &g_status, 0);
-		else
-			ft_exe(mini->commands[0], mini->commands, env, mini);
-	}
-}
 
 void	ft_exit(t_args *mini)
 {
