@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/12 17:21:13 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/15 20:38:01 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:02:36 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,12 @@ void	ft_exit(t_args *mini)
 	}
 }
 
-char	**ft_functs(char **env, t_args *mini)
+char	**ft_builtins(t_args *mini, char **env, int *i)
 {
-	int		k;
+	int ret;
+	int k;
 
+	ret = 1;
 	k = 0;
 	if (!(ft_strcmp("export", mini->commands[0])) && mini->commands[1])
 	{
@@ -54,9 +56,19 @@ char	**ft_functs(char **env, t_args *mini)
 		env = ft_cd(env, mini);
 	else if (!ft_strcmp("env", mini->commands[0]))
 		ft_env(mini, env);
-	else if (!mini->type[0])
-		ft_runcmmd(env, mini);
 	else
+		ret = 0;
+	*i = ret;
+	return (env);
+}
+
+char	**ft_functs(char **env, t_args *mini)
+{
+	int i;
+
+	i = 0;
+	env = ft_builtins(mini, env, &i);
+	if (!i)
 		ft_exe(mini->commands[0], mini->commands, env, mini);
 	if (mini->type[0])
 		exit(g_status / 256);

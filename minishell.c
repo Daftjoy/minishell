@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 19:23:38 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/15 20:38:02 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/16 13:27:06 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**ft_read_command(char **env, t_args *mini)
 	{
 		mini->args2 = ft_split2(mini->args[i], mini);
 		mini->arg = 0;
-		env = ft_redir(mini, env);
+		env = ft_redir(mini, env, 1);
 		ft_free_arr(mini->args2);
 	}
 	return (env);

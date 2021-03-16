@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/08 19:25:13 by agianico          #+#    #+#             */
-/*   Updated: 2021/03/15 20:48:20 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:09:06 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,12 @@ char	*ft_mini_trim(char *str)
 	return (ret);
 }
 
-char	**ft_redir(t_args *mini, char **env)
+char	**ft_redir(t_args *mini, char **env, int opt)
 {
-	char *trim;
+	char	*trim;
+	int		i;
 
+	i = 0;
 	trim = ft_mini_trim(mini->args2[mini->arg]);
 	mini->commands = ft_split(trim, ' ');
 	free(trim);
@@ -74,10 +76,21 @@ char	**ft_redir(t_args *mini, char **env)
 	else if (mini->type[mini->arg] == '<')
 		ft_input(mini, env);
 	else if (!(mini->type[mini->arg]))
-		env = ft_functs(env, mini);
+	{
+		env = ft_builtins(mini, env, &i);
+		if (!i)
+		{
+			g_pid = fork();
+			if (g_pid == 0)
+				env = ft_functs(env, mini);
+			else
+				waitpid(g_pid, &g_status, 0);
+		}
+	}
 	else
 		ft_pipe(mini, env);
-	ft_free_arr(mini->commands);
+	if (opt)
+		ft_free_arr(mini->commands);
 	return (env);
 }
 
@@ -102,7 +115,8 @@ void	ft_only_redir(t_args *mini, char **env)
 	if (mini->type[mini->arg] == '|')
 	{
 		mini->arg++;
-		env = ft_redir(mini, env);
+		ft_free_arr(mini->commands);
+		env = ft_redir(mini, env, 0);
 	}
 }
 

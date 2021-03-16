@@ -6,7 +6,7 @@
 /*   By: antmarti <antmarti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 12:12:48 by antmarti          #+#    #+#             */
-/*   Updated: 2021/03/16 12:13:54 by antmarti         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:13:24 by antmarti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,6 @@ void	ft_final_dup3(t_args *mini)
 		if (g_pid == 0)
 			exit(ft_pipe_error(mini));
 		else
-			wait(NULL);
+			waitpid(g_pid, &g_status, 0);
 	}
 }
