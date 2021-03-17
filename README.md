@@ -1,2 +1,2 @@
 # minishell
-42 Project to recreate the bash shell.
+the aim of this 42 Project is to recreate the bash shell.
